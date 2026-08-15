@@ -154,7 +154,7 @@ window.LLApp = (function () {
     if (window.__LL_STANDALONE__) return; // no server in standalone mode
     try {
       if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.protocol === 'http:')) {
-        navigator.serviceWorker.register('sw.js?v=19').catch(() => {});
+        navigator.serviceWorker.register('sw.js?v=23').catch(() => {});
       }
     } catch (e) { /* sandboxed environments: skip */ }
   }

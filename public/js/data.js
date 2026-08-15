@@ -46,7 +46,10 @@ const COLORS = {
   orange: { name: 'Orange', css: '#f97316', emoji: '🟠' },
   purple: { name: 'Purple', css: '#a855f7', emoji: '🟣' },
   pink:   { name: 'Pink',   css: '#f472b6', emoji: '🩷' },
-  brown:  { name: 'Brown',  css: '#92400e', emoji: '🟤' }
+  brown:  { name: 'Brown',  css: '#92400e', emoji: '🟤' },
+  black:  { name: 'Black',  css: '#1a1a2e', emoji: '⚫' },
+  white:  { name: 'White',  css: '#f0f0f0', emoji: '⚪' },
+  grey:   { name: 'Grey',   css: '#9ca3af', emoji: '🩶' }
 };
 
 /* ------------------------------------------------------------------ */
@@ -88,6 +91,12 @@ function shapeSVG(shape, size, fill) {
     case 'moon':
       body = `<path d="M ${half*0.55} ${s*0.08} A ${half*0.8} ${half*0.8} 0 1 0 ${half*0.95} ${s*0.72} A ${half*0.6} ${half*0.6} 0 1 1 ${half*0.55} ${s*0.08} Z" fill="${c}" stroke="${stroke}" stroke-width="${sw}" stroke-linejoin="round"/>`;
       break;
+    case 'pentagon':
+      body = `<polygon points="${polygonPoints(half, half, half*0.78, 5)}" fill="${c}" stroke="${stroke}" stroke-width="${sw}" stroke-linejoin="round"/>`;
+      break;
+    case 'hexagon':
+      body = `<polygon points="${polygonPoints(half, half, half*0.78, 6)}" fill="${c}" stroke="${stroke}" stroke-width="${sw}" stroke-linejoin="round"/>`;
+      break;
     default:
       body = `<circle cx="${half}" cy="${half}" r="${half*0.7}" fill="${c}" stroke="${stroke}" stroke-width="${sw}"/>`;
   }
@@ -108,9 +117,19 @@ function heartPath(cx, cy, r) {
   return `M ${cx} ${cy + r * 0.9} C ${cx - r * 1.4} ${cy - r * 0.1} ${cx - r * 0.9} ${cy - r * 1.1} ${cx} ${cy - r * 0.35} C ${cx + r * 0.9} ${cy - r * 1.1} ${cx + r * 1.4} ${cy - r * 0.1} ${cx} ${cy + r * 0.9} Z`;
 }
 
+function polygonPoints(cx, cy, r, sides) {
+  const pts = [];
+  for (let i = 0; i < sides; i++) {
+    const a = (Math.PI * 2 * i) / sides - Math.PI / 2;
+    pts.push(`${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)}`);
+  }
+  return pts.join(' ');
+}
+
 const SHAPE_NAMES = {
   circle: 'Circle', square: 'Square', triangle: 'Triangle', star: 'Star',
-  heart: 'Heart', rectangle: 'Rectangle', oval: 'Oval', diamond: 'Diamond', moon: 'Moon'
+  heart: 'Heart', rectangle: 'Rectangle', oval: 'Oval', diamond: 'Diamond', moon: 'Moon',
+  pentagon: 'Pentagon', hexagon: 'Hexagon'
 };
 
 /* ------------------------------------------------------------------ */
@@ -423,7 +442,41 @@ CURRICULUM.baby = {
     makeLesson('b-e3', 'english', 'My First Words', '🅰️', [
       wordStep('Apple', '🍎'), wordStep('Ball', '⚽'), wordStep('Cat', '🐱'),
       matchStep([['🍎', 'Apple'], ['⚽', 'Ball'], ['🐱', 'Cat']])
-    ], 'First words')
+    ], 'First words'),
+    makeLesson('b-e5', 'english', 'Letters G, H, I', '🔤', [
+      ...letterIntro('G'), findLetter('G', ['G', 'H', 'I']),
+      ...letterIntro('H'), findLetter('H', ['G', 'H', 'I']),
+      ...letterIntro('I'), findLetter('I', ['G', 'H', 'I'])
+    ], 'Letters'),
+    makeLesson('b-e6', 'english', 'Letters J, K, L', '🔡', [
+      ...letterIntro('J'), findLetter('J', ['J', 'K', 'L']),
+      ...letterIntro('K'), findLetter('K', ['J', 'K', 'L']),
+      ...letterIntro('L'), findLetter('L', ['J', 'K', 'L'])
+    ], 'Letters'),
+    makeLesson('b-e7', 'english', 'Find the Letters', '🔍', [
+      infoStep('Letter Hunt', 'Can you find the right letter?', '🔍'),
+      findLetter('A', ['A', 'M', 'S']),
+      findLetter('B', ['B', 'P', 'D']),
+      findLetter('C', ['C', 'G', 'O']),
+      findLetter('D', ['D', 'B', 'P'])
+    ], 'Letter recognition'),
+    makeLesson('b-e8', 'english', 'Animal Words', '🐾', [
+      wordStep('Dog', '🐶'), wordStep('Cat', '🐱'), wordStep('Cow', '🐄'),
+      wordStep('Hen', '🐔'),
+      matchStep([['🐶', 'Dog'], ['🐱', 'Cat'], ['🐄', 'Cow'], ['🐔', 'Hen']])
+    ], 'Animal words'),
+    makeLesson('b-e9', 'english', 'Food Words', '🍽️', [
+      wordStep('Milk', '🥛'), wordStep('Banana', '🍌'), wordStep('Egg', '🥚'),
+      wordStep('Bread', '🍞'),
+      matchStep([['🥛', 'Milk'], ['🍌', 'Banana'], ['🥚', 'Egg'], ['🍞', 'Bread']])
+    ], 'Food words'),
+    makeLesson('b-e10', 'english', 'Letter Sounds: A, B, C', '🔊', [
+      infoStep('A says ah', 'A says ah, ah, Apple!', '🍎'),
+      infoStep('B says buh', 'B says buh, buh, Ball!', '⚽'),
+      infoStep('C says kuh', 'C says kuh, kuh, Cat!', '🐱'),
+      qStep('Which letter says buh?', ['A', 'B', 'C'], 'B', '⚽'),
+      qStep('Which letter says ah?', ['A', 'B', 'C'], 'A', '🍎')
+    ], 'Letter sounds')
   ],
   maths: [
     makeLesson('b-m1', 'maths', 'Count 1, 2, 3', '🔢', [
@@ -450,7 +503,40 @@ CURRICULUM.baby = {
       countStep('🍎', 5, 5),
       traceStep('number', '5'),
       findNumber('Where is the number 5?', 5, 5)
-    ], 'Number 5 adventure')
+    ], 'Number 5 adventure'),
+    makeLesson('b-m5', 'maths', 'Count the Animals', '🐾', [
+      infoStep('Count Animals', 'Let us count the animals!', '🐾'),
+      countStep('🐶', 1, 5), countStep('🐱', 2, 5), countStep('🐔', 3, 5),
+      countStep('🐸', 4, 5), countStep('🐟', 5, 5)
+    ], 'Counting animals'),
+    makeLesson('b-m6', 'maths', 'Count the Fruits', '🍎', [
+      infoStep('Count Fruits', 'Let us count the fruits!', '🍇'),
+      countStep('🍌', 2, 5), countStep('🍊', 3, 5), countStep('🍓', 4, 5),
+      countStep('🥭', 5, 5), countStep('🍎', 1, 5)
+    ], 'Counting fruits'),
+    makeLesson('b-m7', 'maths', 'Big and Small', '🐘', [
+      infoStep('Big and Small', 'Some things are big and some are small!', '📏'),
+      qStep('Which one is BIG?', ['🐘 Elephant', '🐜 Ant', '🐁 Mouse'], '🐘 Elephant', '🐘'),
+      qStep('Which one is SMALL?', ['🐘 Elephant', '🐁 Mouse', '🐄 Cow'], '🐁 Mouse', '🐁'),
+      qStep('Which fruit is BIGGER?', ['🍉 Watermelon', '🍒 Cherry', '🍇 Grape'], '🍉 Watermelon', '🍉')
+    ], 'Comparing size'),
+    makeLesson('b-m8', 'maths', 'Trace Numbers 1-5', '✏️', [
+      infoStep('Trace the Numbers', 'Use your finger to trace each number!', '✏️'),
+      traceStep('number', '1'), traceStep('number', '2'), traceStep('number', '3'),
+      traceStep('number', '4'), traceStep('number', '5')
+    ], 'Tracing numbers'),
+    makeLesson('b-m9', 'maths', 'More Shapes', '🔷', [
+      shapeIntro('heart'), findShape('heart', ['heart', 'circle', 'star']),
+      shapeIntro('oval'), findShape('oval', ['oval', 'square', 'circle']),
+      shapeIntro('diamond'), findShape('diamond', ['diamond', 'triangle', 'square'])
+    ], 'More shapes'),
+    makeLesson('b-m10', 'maths', 'Same or Different', '🔍', [
+      infoStep('Same or Different', 'Look carefully. Are they the same or different?', '🔍'),
+      qStep('Are these the same? 🍎 🍎', ['Same! ✅', 'Different! ❌'], 'Same! ✅', '🍎'),
+      qStep('Are these the same? 🐶 🐱', ['Same! ✅', 'Different! ❌'], 'Different! ❌', '🐾'),
+      qStep('Are these the same? ⭐ ⭐', ['Same! ✅', 'Different! ❌'], 'Same! ✅', '⭐'),
+      qStep('Are these the same? 🔴 🔵', ['Same! ✅', 'Different! ❌'], 'Different! ❌', '🎨')
+    ], 'Same and different')
   ],
   science: [
     makeLesson('b-s1', 'science', 'My Body', '🫀', [
@@ -478,7 +564,43 @@ CURRICULUM.baby = {
       { t: 'media', id: 'song-animal-friends', label: 'Sing the Animal Friends song!' },
       qStep('Which animal says woof woof?', ['🐶 Dog', '🐱 Cat', '🐤 Chick'], '🐶 Dog', '🐶'),
       matchStep([['🐶', 'Dog'], ['🐱', 'Cat'], ['🐤', 'Chick']])
-    ], 'Animals')
+    ], 'Animals'),
+    makeLesson('b-s5', 'science', 'My Body Parts', '🧒', [
+      infoStep('Head', 'This is my head! I think with my head.', '🗣️'),
+      infoStep('Arms', 'These are my arms! I hug with my arms.', '💪'),
+      infoStep('Legs', 'These are my legs! I walk with my legs.', '🦵'),
+      infoStep('Feet', 'These are my feet! I stand on my feet.', '🦶'),
+      qStep('What do we walk with?', ['🦶 Feet', '👂 Ears', '👃 Nose'], '🦶 Feet', '🦶')
+    ], 'My body'),
+    makeLesson('b-s6', 'science', 'Fruits We Eat', '🍎', [
+      infoStep('Banana', 'A banana is yellow and sweet!', '🍌'),
+      infoStep('Mango', 'A mango is juicy and delicious!', '🥭'),
+      infoStep('Apple', 'An apple is crunchy and healthy!', '🍎'),
+      infoStep('Orange', 'An orange is round and full of juice!', '🍊'),
+      qStep('Which fruit is yellow?', ['🍌 Banana', '🍎 Apple', '🍇 Grapes'], '🍌 Banana', '🍌')
+    ], 'Fruits'),
+    makeLesson('b-s7', 'science', 'Wash Your Hands', '🧼', [
+      infoStep('Clean Hands', 'We wash our hands to stay healthy!', '🧼'),
+      infoStep('Before Eating', 'Always wash hands before eating!', '🍽️'),
+      infoStep('After Playing', 'Wash your hands after playing outside!', '⚽'),
+      { t: 'media', id: 'song-wash-hands', label: 'Sing the Wash Your Hands song!' },
+      qStep('When should we wash our hands?', ['🧼 Before eating', '😴 While sleeping', '📺 While watching TV'], '🧼 Before eating', '🧼')
+    ], 'Hygiene'),
+    makeLesson('b-s8', 'science', 'Animal Sounds', '🔊', [
+      infoStep('The Cat', 'The cat says meow!', '🐱'),
+      infoStep('The Goat', 'The goat says maa!', '🐐'),
+      infoStep('The Pig', 'The pig says oink!', '🐷'),
+      infoStep('The Rooster', 'The rooster says cock-a-doodle-doo!', '🐓'),
+      qStep('Which animal says meow?', ['🐱 Cat', '🐐 Goat', '🐷 Pig'], '🐱 Cat', '🐱'),
+      qStep('Which animal says oink?', ['🐷 Pig', '🐱 Cat', '🐓 Rooster'], '🐷 Pig', '🐷')
+    ], 'Animal sounds'),
+    makeLesson('b-s9', 'science', 'Day and Night', '🌞', [
+      infoStep('Daytime', 'In the daytime, the sun shines and we play!', '☀️'),
+      infoStep('Nighttime', 'At night, the moon and stars come out and we sleep!', '🌙'),
+      infoStep('Morning', 'In the morning, we wake up and eat breakfast!', '🌅'),
+      qStep('When do we sleep?', ['🌙 At night', '☀️ In the day', '🌅 In the morning'], '🌙 At night', '🌙'),
+      qStep('When does the sun shine?', ['☀️ In the day', '🌙 At night', '🌧️ In the rain'], '☀️ In the day', '☀️')
+    ], 'Day and night')
   ],
   sst: [
     makeLesson('b-sst1', 'sst', 'My Family', '👨‍👩‍👧', [
@@ -498,7 +620,36 @@ CURRICULUM.baby = {
       infoStep('Thank You', 'We say thank you when someone helps us!', '🙏'),
       { t: 'media', id: 'song-good-morning', label: 'Sing the Good Morning song!' },
       qStep('What do we say when we meet a friend?', ['👋 Hello', '😴 Good night', '🍎 Apple'], '👋 Hello', '👋')
-    ], 'Greetings')
+    ], 'Greetings'),
+    makeLesson('b-sst4', 'sst', 'Please and Sorry', '🙏', [
+      infoStep('Please', 'We say please when we want something nicely!', '🙏'),
+      infoStep('Sorry', 'We say sorry when we make a mistake!', '😔'),
+      infoStep('Excuse Me', 'We say excuse me when we need to pass!', '🚶'),
+      qStep('What do we say when we want something nicely?', ['🙏 Please', '😴 Good night', '🏃 Run'], '🙏 Please', '🙏'),
+      qStep('What do we say when we make a mistake?', ['😔 Sorry', '🎉 Party', '🍎 Apple'], '😔 Sorry', '😔')
+    ], 'Good manners'),
+    makeLesson('b-sst5', 'sst', 'Sharing is Caring', '🤝', [
+      infoStep('Share Toys', 'We share our toys with friends!', '🧸'),
+      infoStep('Share Food', 'We can share our food with others!', '🍞'),
+      infoStep('Take Turns', 'We take turns on the swing!', '🎠'),
+      qStep('What should we do with our toys?', ['🤝 Share them', '😤 Keep all', '😢 Cry'], '🤝 Share them', '🧸'),
+      qStep('What do we do on the swing?', ['🎠 Take turns', '😤 Push others', '😴 Sleep'], '🎠 Take turns', '🎠')
+    ], 'Sharing'),
+    makeLesson('b-sst6', 'sst', 'My Feelings', '😊', [
+      infoStep('Happy', 'I feel happy when I play!', '😊'),
+      infoStep('Sad', 'I feel sad when I miss Mummy.', '😢'),
+      infoStep('Angry', 'I feel angry when someone takes my toy.', '😠'),
+      infoStep('Scared', 'I feel scared in the dark.', '😨'),
+      qStep('How do you feel when you play?', ['😊 Happy', '😢 Sad', '😨 Scared'], '😊 Happy', '😊'),
+      qStep('How do you feel when you miss Mummy?', ['😢 Sad', '😊 Happy', '😠 Angry'], '😢 Sad', '😢')
+    ], 'Emotions'),
+    makeLesson('b-sst7', 'sst', 'People at Home', '👨‍👩‍👧‍👦', [
+      infoStep('Grandma', 'Grandma tells us lovely stories!', '👵'),
+      infoStep('Grandpa', 'Grandpa is wise and kind!', '👴'),
+      infoStep('Brother', 'My brother plays with me!', '👦'),
+      infoStep('Sister', 'My sister sings with me!', '👧'),
+      qStep('Who tells us lovely stories?', ['👵 Grandma', '🚌 Bus driver', '🌳 Tree'], '👵 Grandma', '👵')
+    ], 'Family members')
   ],
   creative: [
     makeLesson('b-c1', 'creative', 'Color the Apple', '🍎', [
@@ -519,7 +670,29 @@ CURRICULUM.baby = {
     makeLesson('b-c3', 'creative', 'Shape Matching', '🧩', [
       infoStep('Match the Shapes', 'Tap the shape and its friend!', '🧩'),
       matchStep([['⭕', 'Circle'], ['⬜', 'Square'], ['⭐', 'Star']])
-    ], 'Matching')
+    ], 'Matching'),
+    makeLesson('b-c5', 'creative', 'Color the Balloon', '🎈', [
+      infoStep('Color the Balloon', 'Pick your favourite color for the balloon!', '🎈'),
+      colorStep('balloon')
+    ], 'Coloring'),
+    makeLesson('b-c6', 'creative', 'Trace Shapes', '✏️', [
+      infoStep('Trace the Shapes', 'Follow the dots to make shapes!', '✏️'),
+      traceStep('shape', 'circle'), traceStep('shape', 'square'), traceStep('shape', 'triangle')
+    ], 'Tracing shapes'),
+    makeLesson('b-c7', 'creative', 'Trace Lines', '〰️', [
+      infoStep('Trace the Lines', 'Follow the lines with your finger!', '〰️'),
+      traceStep('line', 'straight'), traceStep('line', 'wave'), traceStep('line', 'zigzag')
+    ], 'Tracing lines'),
+    makeLesson('b-c8', 'creative', 'All the Colors', '🌈', [
+      colorIntro('red'), colorIntro('blue'), colorIntro('yellow'),
+      colorIntro('green'),
+      findColor('blue', ['red', 'blue', 'yellow']),
+      findColor('yellow', ['green', 'yellow', 'red'])
+    ], 'Colors'),
+    makeLesson('b-c9', 'creative', 'Color the Fish', '🐠', [
+      infoStep('Color the Fish', 'Make the fish colorful!', '🐠'),
+      colorStep('fish')
+    ], 'Coloring')
   ]
 };
 
@@ -539,7 +712,38 @@ CURRICULUM.middle = {
     makeLesson('m-e3', 'english', 'Simple Words', '📝', [
       wordStep('Dog', '🐶'), wordStep('Cat', '🐱'), wordStep('Sun', '☀️'), wordStep('Hat', '🎩'),
       matchStep([['🐶', 'Dog'], ['🐱', 'Cat'], ['☀️', 'Sun'], ['🎩', 'Hat']])
-    ], 'Words')
+    ], 'Words'),
+    makeLesson('m-e4', 'english', 'Letters S to X', '🔤', [
+      ...letterIntro('S'), ...letterIntro('T'), ...letterIntro('U'),
+      findLetter('T', ['T', 'U', 'S']),
+      ...letterIntro('V'), ...letterIntro('W'), ...letterIntro('X'),
+      findLetter('W', ['W', 'V', 'X'])
+    ], 'Letters'),
+    makeLesson('m-e5', 'english', 'Letters Y and Z', '🔡', [
+      ...letterIntro('Y'), ...letterIntro('Z'),
+      findLetter('Y', ['Y', 'Z', 'X']),
+      findLetter('Z', ['Z', 'Y', 'A']),
+      { t: 'media', id: 'song-alphabet', label: 'Sing the full Alphabet Song!' }
+    ], 'Letters'),
+    makeLesson('m-e6', 'english', 'Uppercase and Lowercase', '🔤', [
+      infoStep('Big and Small Letters', 'Every letter has a big (uppercase) and small (lowercase) form!', '🔤'),
+      infoStep('A and a', 'Big A and small a are the same letter!', '🅰️'),
+      infoStep('B and b', 'Big B and small b are the same letter!', '🅱️'),
+      qStep('Which is the small letter for D?', ['d', 'P', 'B'], 'd', '🔤'),
+      qStep('Which is the big letter for g?', ['G', 'J', 'Q'], 'G', '🔤')
+    ], 'Upper & lowercase'),
+    makeLesson('m-e7', 'english', 'Body Part Words', '🧒', [
+      wordStep('Eyes', '👀'), wordStep('Nose', '👃'), wordStep('Mouth', '👄'),
+      wordStep('Ear', '👂'),
+      matchStep([['👀', 'Eyes'], ['👃', 'Nose'], ['👄', 'Mouth'], ['👂', 'Ear']])
+    ], 'Body words'),
+    makeLesson('m-e8', 'english', 'Missing Letters', '❓', [
+      infoStep('Find the Missing Letter', 'What letter is missing?', '❓'),
+      qStep('C_T (an animal that says meow)', ['A', 'O', 'U'], 'A', '🐱'),
+      qStep('D_G (an animal that says woof)', ['O', 'A', 'E'], 'O', '🐶'),
+      qStep('S_N (the bright thing in the sky)', ['U', 'A', 'O'], 'U', '☀️'),
+      qStep('B_LL (you kick it)', ['A', 'I', 'U'], 'A', '⚽')
+    ], 'Missing letters')
   ],
   maths: [
     makeLesson('m-m1', 'maths', 'Count to 10', '🔢', [
@@ -555,7 +759,38 @@ CURRICULUM.middle = {
       shapeIntro('triangle'), findShape('triangle', ['triangle', 'circle', 'square']),
       shapeIntro('star'), findShape('star', ['star', 'circle', 'triangle']),
       shapeIntro('heart'), findShape('heart', ['heart', 'star', 'square'])
-    ], 'Shapes')
+    ], 'Shapes'),
+    makeLesson('m-m4', 'maths', 'Count the Fruits', '🍎', [
+      infoStep('Fruit Counting', 'Count the fruits carefully!', '🍎'),
+      countStep('🍌', 6, 10), countStep('🥭', 7, 10), countStep('🍊', 8, 10),
+      countStep('🍇', 9, 10), countStep('🍓', 10, 10)
+    ], 'Counting fruits'),
+    makeLesson('m-m5', 'maths', 'Numbers 6 to 10', '🔢', [
+      infoStep('Numbers 6-10', 'Let us learn numbers from 6 to 10!', '🔢'),
+      findNumber('Where is the number 6?', 6, 10),
+      findNumber('Where is the number 7?', 7, 10),
+      findNumber('Where is the number 8?', 8, 10),
+      findNumber('Where is the number 9?', 9, 10),
+      findNumber('Where is the number 10?', 10, 10)
+    ], 'Numbers 6-10'),
+    makeLesson('m-m6', 'maths', 'Trace Numbers 4-9', '✏️', [
+      infoStep('Trace the Numbers', 'Follow the dots to trace each number!', '✏️'),
+      traceStep('number', '4'), traceStep('number', '5'), traceStep('number', '6'),
+      traceStep('number', '7'), traceStep('number', '8'), traceStep('number', '9')
+    ], 'Tracing numbers'),
+    makeLesson('m-m7', 'maths', 'Patterns', '🔴', [
+      infoStep('Patterns', 'What comes next in the pattern?', '🧩'),
+      patternStep(['🔴', '🔵', '🔴', '🔵'], '🔴'),
+      patternStep(['⭐', '🌙', '⭐', '🌙'], '⭐'),
+      patternStep(['🍎', '🍌', '🍎', '🍌'], '🍎'),
+      patternStep(['🐶', '🐱', '🐶', '🐱'], '🐶')
+    ], 'Patterns'),
+    makeLesson('m-m8', 'maths', 'Compare: More and Fewer', '⚖️', [
+      compareStep('🍎', 7, '🍌', 3),
+      compareStep('⭐', 4, '🌸', 8),
+      compareStep('🐶', 6, '🐱', 2),
+      compareStep('🎈', 3, '🌺', 9)
+    ], 'Comparing numbers')
   ],
   science: [
     makeLesson('m-s1', 'science', 'Parts of a Plant', '🌱', [
@@ -575,7 +810,35 @@ CURRICULUM.middle = {
       infoStep('Kitten', 'A baby cat is called a kitten.', '🐱'),
       infoStep('Chick', 'A baby chicken is called a chick.', '🐤'),
       qStep('What is a baby dog called?', ['🐶 Puppy', '🐱 Kitten', '🐤 Chick'], '🐶 Puppy', '🐶')
-    ], 'Animals')
+    ], 'Animals'),
+    makeLesson('m-s4', 'science', 'Domestic Animals', '🏠', [
+      infoStep('Dog', 'A dog lives at home. It is a domestic animal.', '🐶'),
+      infoStep('Cat', 'A cat lives at home too!', '🐱'),
+      infoStep('Chicken', 'Chickens live on the farm.', '🐔'),
+      infoStep('Goat', 'Goats live on the farm.', '🐐'),
+      qStep('Which animal lives at home?', ['🐶 Dog', '🦁 Lion', '🐘 Elephant'], '🐶 Dog', '🐶'),
+      qStep('Which animal lives on the farm?', ['🐐 Goat', '🦁 Lion', '🐍 Snake'], '🐐 Goat', '🐐')
+    ], 'Domestic animals'),
+    makeLesson('m-s5', 'science', 'What Do Animals Eat?', '🍽️', [
+      infoStep('Dog', 'A dog eats meat and bones.', '🐶'),
+      infoStep('Cow', 'A cow eats grass.', '🐄'),
+      infoStep('Hen', 'A hen eats grains and seeds.', '🐔'),
+      infoStep('Fish', 'A fish eats small things in water.', '🐟'),
+      qStep('What does a cow eat?', ['🌿 Grass', '🍖 Meat', '🍞 Bread'], '🌿 Grass', '🐄'),
+      qStep('What does a hen eat?', ['🌾 Grains', '🍖 Meat', '🍌 Banana'], '🌾 Grains', '🐔')
+    ], 'Animal food'),
+    makeLesson('m-s6', 'science', 'Brushing Teeth', '🪥', [
+      infoStep('Clean Teeth', 'We brush our teeth to keep them clean and strong!', '🪥'),
+      infoStep('Morning', 'Brush your teeth every morning!', '🌅'),
+      infoStep('Night', 'Brush your teeth before bed!', '🌙'),
+      qStep('When should we brush our teeth?', ['🌅 Morning and 🌙 night', '😴 Only when sleeping', '🎮 Only when playing'], '🌅 Morning and 🌙 night', '🪥')
+    ], 'Hygiene'),
+    makeLesson('m-s7', 'science', 'Clean Water', '💧', [
+      infoStep('Clean Water', 'We must drink clean water to stay healthy!', '💧'),
+      infoStep('Boil Water', 'We can boil water to make it safe.', '🫖'),
+      infoStep('Dirty Water', 'Dirty water can make us sick.', '🤢'),
+      qStep('What kind of water should we drink?', ['💧 Clean water', '🤢 Dirty water', '🌊 Lake water'], '💧 Clean water', '💧')
+    ], 'Clean water')
   ],
   sst: [
     makeLesson('m-sst1', 'sst', 'My School', '🏫', [
@@ -596,7 +859,31 @@ CURRICULUM.middle = {
       infoStep('Eat Healthy', 'Eat fruits and vegetables to grow strong!', '🥕'),
       { t: 'media', id: 'song-wash-hands', label: 'Sing the Wash Your Hands song!' },
       qStep('When should we wash our hands?', ['🧼 Before eating', '🛏️ After sleeping', '📚 While reading'], '🧼 Before eating', '🧼')
-    ], 'Habits')
+    ], 'Habits'),
+    makeLesson('m-sst4', 'sst', 'Community Helpers', '👷', [
+      infoStep('Teacher', 'A teacher helps us to learn at school.', '👩‍🏫'),
+      infoStep('Doctor', 'A doctor makes us better when we are sick.', '👩‍⚕️'),
+      infoStep('Farmer', 'A farmer grows food for us to eat.', '👨‍🌾'),
+      infoStep('Police Officer', 'A police officer keeps us safe.', '👮'),
+      infoStep('Driver', 'A driver takes us from place to place.', '🚗'),
+      qStep('Who helps us learn at school?', ['👩‍🏫 Teacher', '👮 Police', '🚗 Driver'], '👩‍🏫 Teacher', '👩‍🏫'),
+      qStep('Who grows food for us?', ['👨‍🌾 Farmer', '👮 Police', '🚗 Driver'], '👨‍🌾 Farmer', '👨‍🌾')
+    ], 'Community helpers'),
+    makeLesson('m-sst5', 'sst', 'Ways of Transport', '🚌', [
+      infoStep('Bicycle', 'A bicycle has two wheels. We pedal it!', '🚲'),
+      infoStep('Boda Boda', 'A boda boda is a motorcycle taxi.', '🛵'),
+      infoStep('Bus', 'A bus carries many people.', '🚌'),
+      infoStep('Car', 'A car takes us from place to place.', '🚗'),
+      qStep('Which has two wheels?', ['🚲 Bicycle', '🚌 Bus', '🚗 Car'], '🚲 Bicycle', '🚲'),
+      qStep('Which carries many people?', ['🚌 Bus', '🚲 Bicycle', '🛵 Boda boda'], '🚌 Bus', '🚌')
+    ], 'Transport'),
+    makeLesson('m-sst6', 'sst', 'Road Safety', '🚦', [
+      infoStep('Look Both Ways', 'Always look left and right before crossing!', '👀'),
+      infoStep('Zebra Crossing', 'Cross the road at the zebra crossing!', '🦓'),
+      infoStep('Traffic Lights', 'Red means stop, green means go!', '🚦'),
+      qStep('What does a RED traffic light mean?', ['🛑 Stop', '🏃 Go', '💤 Sleep'], '🛑 Stop', '🚦'),
+      qStep('Where should we cross the road?', ['🦓 Zebra crossing', '🌳 Anywhere', '🚗 In the middle'], '🦓 Zebra crossing', '🦓')
+    ], 'Road safety')
   ],
   creative: [
     makeLesson('m-c1', 'creative', 'Color the Flower', '🌸', [
@@ -611,7 +898,28 @@ CURRICULUM.middle = {
       infoStep('Match the Colors', 'Tap the color and its name!', '🎨'),
       { t: 'media', id: 'song-colors', label: 'Sing the colors song!' },
       matchStep([['🔴', 'Red'], ['🔵', 'Blue'], ['🟢', 'Green'], ['🟡', 'Yellow']])
-    ], 'Matching')
+    ], 'Matching'),
+    makeLesson('m-c4', 'creative', 'Color the House', '🏠', [
+      infoStep('Color the House', 'Give the house a happy paint job!', '🏠'),
+      colorStep('house')
+    ], 'Coloring'),
+    makeLesson('m-c5', 'creative', 'Trace Letters D-F', '✏️', [
+      infoStep('Trace the Letters', 'Follow the dots carefully!', '✏️'),
+      traceStep('letter', 'D'), traceStep('letter', 'E'), traceStep('letter', 'F')
+    ], 'Tracing letters'),
+    makeLesson('m-c6', 'creative', 'Trace Numbers 4-6', '🔢', [
+      infoStep('Trace the Numbers', 'Follow the dotted paths!', '✏️'),
+      traceStep('number', '4'), traceStep('number', '5'), traceStep('number', '6')
+    ], 'Tracing numbers'),
+    makeLesson('m-c7', 'creative', 'Color the Butterfly', '🦋', [
+      infoStep('Color the Butterfly', 'Make the butterfly beautiful!', '🦋'),
+      colorStep('butterfly')
+    ], 'Coloring'),
+    makeLesson('m-c8', 'creative', 'More Colors', '🌈', [
+      colorIntro('orange'), colorIntro('purple'), colorIntro('pink'), colorIntro('brown'),
+      findColor('orange', ['orange', 'red', 'purple']),
+      findColor('pink', ['pink', 'purple', 'brown'])
+    ], 'More colors')
   ]
 };
 
@@ -633,7 +941,33 @@ CURRICULUM.top = {
       qStep('Where did the cat sit?', ['On the mat', 'In the tree', 'In the water'], 'On the mat', '🐱'),
       readStep('A dog ran to the sun.', '🐶'),
       qStep('What ran to the sun?', ['A cat', 'A dog', 'A hen'], 'A dog', '🐶')
-    ], 'Reading')
+    ], 'Reading'),
+    makeLesson('t-e4', 'english', 'Phonics: Beginning Sounds', '🔊', [
+      infoStep('Beginning Sounds', 'Every word starts with a sound!', '🔊'),
+      qStep('What sound does Ball start with?', ['B', 'M', 'S'], 'B', '⚽'),
+      qStep('What sound does Dog start with?', ['D', 'T', 'P'], 'D', '🐶'),
+      qStep('What sound goes with Cat?', ['C says kuh', 'M says mmm', 'S says sss'], 'C says kuh', '🐱'),
+      qStep('What sound does Sun start with?', ['S', 'C', 'Z'], 'S', '☀️')
+    ], 'Beginning sounds'),
+    makeLesson('t-e5', 'english', 'CVC Words: -at Family', '📖', [
+      infoStep('The -at Family', 'Cat, bat, hat, mat — they all end in -at!', '🐱'),
+      wordStep('Cat', '🐱'), wordStep('Bat', '🦇'), wordStep('Hat', '🎩'), wordStep('Mat', '🟫'),
+      readStep('The cat sat on the mat with a hat.', '🐱'),
+      qStep('Which word rhymes with cat?', ['Hat', 'Dog', 'Sun'], 'Hat', '🎩')
+    ], 'Word families'),
+    makeLesson('t-e6', 'english', 'CVC Words: -an Family', '📖', [
+      infoStep('The -an Family', 'Man, van, fan, can — they all end in -an!', '👨'),
+      wordStep('Man', '👨'), wordStep('Van', '🚐'), wordStep('Fan', '🌀'), wordStep('Can', '🥫'),
+      readStep('The man has a van and a fan.', '👨'),
+      qStep('Which word rhymes with man?', ['Van', 'Dog', 'Red'], 'Van', '🚐')
+    ], 'Word families'),
+    makeLesson('t-e7', 'english', 'Reading: Short Stories', '📚', [
+      readStep('The hen has a nest. The nest is in the tree. The hen sits on eggs.', '🐔'),
+      qStep('Where is the nest?', ['In the tree', 'In the water', 'On the road'], 'In the tree', '🌳'),
+      qStep('What does the hen sit on?', ['Eggs', 'Stones', 'Leaves'], 'Eggs', '🥚'),
+      readStep('Tom has a big red ball. He plays with it in the sun. He is happy.', '⚽'),
+      qStep('What does Tom have?', ['A big red ball', 'A blue kite', 'A yellow hat'], 'A big red ball', '⚽')
+    ], 'Reading comprehension')
   ],
   maths: [
     makeLesson('t-m1', 'maths', 'Count to 20', '🔢', [
@@ -649,7 +983,42 @@ CURRICULUM.top = {
       shapeIntro('rectangle'), shapeIntro('oval'), shapeIntro('diamond'),
       patternStep(['🔴', '🔵', '🔴', '🔵'], '🔴'),
       patternStep(['⭐', '⭐', '🌙', '⭐', '⭐'], '🌙')
-    ], 'Shapes & patterns')
+    ], 'Shapes & patterns'),
+    makeLesson('t-m4', 'maths', 'Numbers 21 to 50', '🔢', [
+      infoStep('Counting On', 'Let us count from 21 to 50!', '🔢'),
+      findNumber('Where is the number 25?', 25, 50),
+      findNumber('Where is the number 30?', 30, 50),
+      findNumber('Where is the number 40?', 40, 50),
+      findNumber('Where is the number 50?', 50, 50),
+      orderStep([22, 25, 23, 24], 'Tap these numbers in order!')
+    ], 'Numbers 21-50'),
+    makeLesson('t-m5', 'maths', 'Taking Away', '➖', [
+      infoStep('Subtraction', 'Taking away makes the number smaller!', '➖'),
+      mathStep(5, 2, '-', '🍎'), mathStep(7, 3, '-', '⭐'), mathStep(6, 4, '-', '🎈'),
+      mathStep(8, 5, '-', '🐤'), mathStep(9, 3, '-', '🌸')
+    ], 'Subtraction'),
+    makeLesson('t-m6', 'maths', 'Counting by Tens', '🔢', [
+      infoStep('Skip Counting', '10, 20, 30, 40, 50, 60, 70, 80, 90, 100!', '🔢'),
+      qStep('What comes after 30?', ['40', '31', '50'], '40', '🔢'),
+      qStep('What comes after 70?', ['80', '71', '90'], '80', '🔢'),
+      qStep('What comes after 50?', ['60', '51', '70'], '60', '🔢'),
+      findNumber('Where is the number 100?', 100, 100)
+    ], 'Skip counting'),
+    makeLesson('t-m7', 'maths', 'Telling Time', '🕐', [
+      infoStep('The Clock', 'A clock tells us the time!', '🕐'),
+      infoStep('O\'clock', 'When the big hand points to 12, we say o\'clock.', '🕐'),
+      infoStep('Morning', 'In the morning it is bright. We go to school!', '🌅'),
+      infoStep('Evening', 'In the evening the sun goes down.', '🌇'),
+      qStep('When do we go to school?', ['🌅 In the morning', '🌙 At midnight', '🌇 In the evening'], '🌅 In the morning', '🌅'),
+      qStep('What tells us the time?', ['🕐 A clock', '📚 A book', '🍎 An apple'], '🕐 A clock', '🕐')
+    ], 'Time'),
+    makeLesson('t-m8', 'maths', 'Days of the Week', '📅', [
+      infoStep('Seven Days', 'There are seven days in a week!', '📅'),
+      infoStep('Monday to Friday', 'Monday, Tuesday, Wednesday, Thursday, Friday — we go to school!', '🏫'),
+      infoStep('Saturday & Sunday', 'Saturday and Sunday are the weekend. We rest and play!', '🎉'),
+      qStep('How many days are in a week?', ['7', '5', '10'], '7', '📅'),
+      qStep('Which days are the weekend?', ['Saturday and Sunday', 'Monday and Tuesday', 'Wednesday and Thursday'], 'Saturday and Sunday', '🎉')
+    ], 'Days of the week')
   ],
   science: [
     makeLesson('t-s1', 'science', 'My Five Senses', '👃', [
@@ -672,7 +1041,39 @@ CURRICULUM.top = {
       infoStep('Fish', 'The fish lives in the water.', '🐟'),
       infoStep('Bird', 'The bird lives in a nest.', '🐦'),
       qStep('Where does a fish live?', ['💧 In water', '🌳 In a tree', '🏠 In a house'], '💧 In water', '🐟')
-    ], 'Habitats')
+    ], 'Habitats'),
+    makeLesson('t-s4', 'science', 'Food We Eat', '🍽️', [
+      infoStep('Fruits', 'Mangoes, bananas and oranges are fruits!', '🍌'),
+      infoStep('Vegetables', 'Tomatoes, carrots and beans are vegetables!', '🥕'),
+      infoStep('Grains', 'Rice, maize and millet are grains!', '🌾'),
+      infoStep('Healthy Food', 'Fruits and vegetables keep us strong!', '💪'),
+      qStep('Which is a fruit?', ['🥭 Mango', '🥕 Carrot', '🍚 Rice'], '🥭 Mango', '🥭'),
+      qStep('Which is a vegetable?', ['🥕 Carrot', '🍌 Banana', '🍚 Rice'], '🥕 Carrot', '🥕')
+    ], 'Food groups'),
+    makeLesson('t-s5', 'science', 'Safety at Home', '🏠', [
+      infoStep('Hot Things', 'Do not touch hot pots and fire!', '🔥'),
+      infoStep('Sharp Things', 'Do not play with knives or blades!', '🔪'),
+      infoStep('Electricity', 'Do not touch wires or sockets!', '⚡'),
+      infoStep('Medicines', 'Never take medicine without an adult!', '💊'),
+      qStep('Should we touch hot pots?', ['🔥 No!', '✅ Yes', '🤷 Maybe'], '🔥 No!', '🔥'),
+      qStep('Should we play with knives?', ['🔪 No!', '✅ Yes', '🤷 Maybe'], '🔪 No!', '🔪')
+    ], 'Home safety'),
+    makeLesson('t-s6', 'science', 'Safety with Strangers', '🚸', [
+      infoStep('Stay with Family', 'Always stay close to your family or teacher.', '👨‍👩‍👧'),
+      infoStep('Do Not Follow Strangers', 'Never go with someone you do not know.', '🚫'),
+      infoStep('Tell an Adult', 'If someone makes you feel scared, tell a trusted adult!', '👩‍🏫'),
+      qStep('Should you go with a stranger?', ['🚫 No!', '✅ Yes', '🤷 Maybe'], '🚫 No!', '🚫'),
+      qStep('If you feel scared, what should you do?', ['👩‍🏫 Tell a trusted adult', '😢 Cry alone', '🏃 Run away'], '👩‍🏫 Tell a trusted adult', '👩‍🏫')
+    ], 'Stranger safety'),
+    makeLesson('t-s7', 'science', 'Parts of a Plant', '🌱', [
+      infoStep('Roots', 'Roots hold the plant and drink water from the soil.', '🌿'),
+      infoStep('Stem', 'The stem carries water up to the leaves.', '🌾'),
+      infoStep('Leaves', 'Leaves make food for the plant using sunlight.', '🍃'),
+      infoStep('Flowers', 'Flowers are beautiful and can become fruits.', '🌸'),
+      infoStep('Fruits', 'Fruits have seeds inside. Seeds grow into new plants!', '🍎'),
+      qStep('What holds the plant in the soil?', ['🌿 Roots', '🌸 Flowers', '🍎 Fruits'], '🌿 Roots', '🌿'),
+      qStep('What makes food for the plant?', ['🍃 Leaves', '🌿 Roots', '🌾 Stem'], '🍃 Leaves', '🍃')
+    ], 'Plants')
   ],
   sst: [
     makeLesson('t-sst1', 'sst', 'Our Country Uganda', '🇺🇬', [
@@ -692,7 +1093,31 @@ CURRICULUM.top = {
       infoStep('The Market', 'People buy and sell food at the market.', '🛒'),
       infoStep('The Mosque & Church', 'People pray in churches and mosques.', '🕌'),
       qStep('Where do people buy food?', ['🛒 At the market', '🌳 In the forest', '🚌 On the bus'], '🛒 At the market', '🛒')
-    ], 'Our area')
+    ], 'Our area'),
+    makeLesson('t-sst4', 'sst', 'Land, Water and Air Transport', '✈️', [
+      infoStep('Land Transport', 'Cars, buses, bicycles and boda bodas travel on land.', '🚗'),
+      infoStep('Water Transport', 'Boats and ships travel on water.', '🚢'),
+      infoStep('Air Transport', 'Aeroplanes and helicopters fly in the air.', '✈️'),
+      qStep('Which travels on water?', ['🚢 Boat', '🚗 Car', '✈️ Aeroplane'], '🚢 Boat', '🚢'),
+      qStep('Which flies in the air?', ['✈️ Aeroplane', '🚗 Car', '🚢 Boat'], '✈️ Aeroplane', '✈️'),
+      qStep('A boda boda travels on...?', ['🛣️ Land', '💧 Water', '☁️ Air'], '🛣️ Land', '🛵')
+    ], 'Transport types'),
+    makeLesson('t-sst5', 'sst', 'Caring for Our Environment', '🌍', [
+      infoStep('Clean Environment', 'A clean environment keeps us healthy!', '✨'),
+      infoStep('Rubbish', 'Put rubbish in the bin, not on the ground!', '🗑️'),
+      infoStep('Plant Trees', 'Trees give us clean air and shade.', '🌳'),
+      qStep('Where should we put rubbish?', ['🗑️ In the bin', '🌊 In the river', '🛣️ On the road'], '🗑️ In the bin', '🗑️'),
+      qStep('Why should we plant trees?', ['🌳 For clean air and shade', '🎮 For games', '📺 For TV'], '🌳 For clean air and shade', '🌳')
+    ], 'Environment'),
+    makeLesson('t-sst6', 'sst', 'My Feelings and Emotions', '😊', [
+      infoStep('Happy', 'I feel happy when I learn something new!', '😊'),
+      infoStep('Sad', 'I feel sad when a friend is hurt.', '😢'),
+      infoStep('Angry', 'I feel angry when someone is unkind.', '😠'),
+      infoStep('Excited', 'I feel excited when we go on a trip!', '🤩'),
+      infoStep('Scared', 'I feel scared when I hear loud thunder.', '😨'),
+      qStep('How do you feel when you learn something new?', ['😊 Happy', '😢 Sad', '😨 Scared'], '😊 Happy', '😊'),
+      qStep('How do you feel when a friend is hurt?', ['😢 Sad', '😊 Happy', '🤩 Excited'], '😢 Sad', '😢')
+    ], 'Emotions')
   ],
   creative: [
     makeLesson('t-c1', 'creative', 'Color the Butterfly', '🦋', [
@@ -706,7 +1131,30 @@ CURRICULUM.top = {
     makeLesson('t-c3', 'creative', 'Tracing Lines', '〰️', [
       infoStep('Trace the Lines', 'Trace the wavy lines!', '〰️'),
       traceStep('line', 'wave'), traceStep('line', 'zigzag'), traceStep('line', 'spiral')
-    ], 'Lines')
+    ], 'Lines'),
+    makeLesson('t-c4', 'creative', 'Color the Tree', '🌳', [
+      infoStep('Color the Tree', 'A happy tree for a happy world!', '🌳'),
+      colorStep('tree')
+    ], 'Coloring'),
+    makeLesson('t-c5', 'creative', 'Trace Letters D-F', '✏️', [
+      infoStep('Trace the Letters', 'Follow the dots carefully!', '✏️'),
+      traceStep('letter', 'D'), traceStep('letter', 'E'), traceStep('letter', 'F')
+    ], 'Tracing letters'),
+    makeLesson('t-c6', 'creative', 'Trace Numbers 4-9', '🔢', [
+      infoStep('Trace the Numbers', 'Follow the dotted paths!', '✏️'),
+      traceStep('number', '4'), traceStep('number', '5'), traceStep('number', '6'),
+      traceStep('number', '7'), traceStep('number', '8'), traceStep('number', '9')
+    ], 'Tracing numbers'),
+    makeLesson('t-c7', 'creative', 'Shape Patterns', '🧩', [
+      infoStep('Pattern Fun', 'What shape comes next?', '🧩'),
+      patternStep(['🔴', '🔵', '🔴', '🔵'], '🔴'),
+      patternStep(['⭐', '⭐', '🌙', '⭐', '⭐'], '🌙'),
+      patternStep(['🟩', '🟨', '🟩', '🟨'], '🟩')
+    ], 'Patterns'),
+    makeLesson('t-c8', 'creative', 'Color the House', '🏠', [
+      infoStep('Color the House', 'Give the house a happy paint job!', '🏠'),
+      colorStep('house')
+    ], 'Coloring')
   ]
 };
 
@@ -1123,7 +1571,9 @@ const TRACE_TEMPLATES = {
     triangle: [[50, 10], [90, 88], [10, 88], [50, 10]],
     star: starPoints(50, 50, 40, 17).split(' ').map(p => p.split(',').map(Number)),
     heart: [[50, 86], [12, 46], [24, 22], [50, 40], [76, 22], [88, 46], [50, 86]],
-    diamond: [[50, 8], [92, 50], [50, 92], [8, 50], [50, 8]]
+    diamond: [[50, 8], [92, 50], [50, 92], [8, 50], [50, 8]],
+    pentagon: [[50, 8], [93, 38], [77, 88], [23, 88], [7, 38], [50, 8]],
+    hexagon: [[50, 8], [88, 28], [88, 72], [50, 92], [12, 72], [12, 28], [50, 8]]
   },
   line: {
     straight: [[5, 50], [95, 50]],
@@ -1136,7 +1586,7 @@ const TRACE_TEMPLATES = {
 const TRACE_LABELS = {
   letter: { A: 'A', B: 'B', C: 'C', D: 'D', E: 'E', F: 'F', G: 'G', H: 'H', I: 'I', J: 'J', K: 'K', L: 'L', M: 'M', N: 'N', O: 'O', P: 'P', Q: 'Q', R: 'R', S: 'S', T: 'T', U: 'U', V: 'V', W: 'W', X: 'X', Y: 'Y', Z: 'Z' },
   number: { '0': '0', '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9' },
-  shape: { circle: '⭕', square: '⬜', triangle: '🔺', star: '⭐', heart: '❤️', diamond: '🔷' },
+  shape: { circle: '⭕', square: '⬜', triangle: '🔺', star: '⭐', heart: '❤️', diamond: '🔷', pentagon: '⬠', hexagon: '⬡' },
   line: { straight: '—', wave: '〰️', zigzag: '⚡', spiral: '🌀' }
 };
 
@@ -1233,6 +1683,53 @@ const COLORING_TEMPLATES = {
       <g class="zone" data-id="shine"><ellipse cx="118" cy="80" rx="14" ry="24" fill="#fff" opacity="0.55" transform="rotate(-20 118 80)"/></g>
       <g class="zone" data-id="stripe"><path d="M120 40 C 140 70 140 150 120 186 C 132 170 140 100 132 48 Z" opacity="0.35"/></g>
       <ellipse cx="150" cy="300" rx="90" ry="10" fill="#e8ecf7" opacity="0.6"/>`
+  },
+  dog: {
+    name: 'The Dog', emoji: '🐶', size: 320,
+    svg: `
+      <g class="zone" data-id="body"><ellipse cx="160" cy="200" rx="70" ry="50"/></g>
+      <g class="zone" data-id="head"><circle cx="230" cy="140" r="50"/></g>
+      <g class="zone" data-id="earL"><ellipse cx="200" cy="100" rx="18" ry="30" transform="rotate(-20 200 100)"/></g>
+      <g class="zone" data-id="earR"><ellipse cx="260" cy="100" rx="18" ry="30" transform="rotate(20 260 100)"/></g>
+      <g class="zone" data-id="eye"><circle cx="245" cy="135" r="8"/></g>
+      <g class="zone" data-id="nose"><ellipse cx="270" cy="150" rx="10" ry="8"/></g>
+      <g class="zone" data-id="tail"><path d="M90 180 Q 60 140 80 100" stroke="#33385c" stroke-width="8" fill="none" stroke-linecap="round"/></g>
+      <g class="zone" data-id="legFL"><rect x="200" y="230" width="16" height="40" rx="8"/></g>
+      <g class="zone" data-id="legFR"><rect x="230" y="230" width="16" height="40" rx="8"/></g>
+      <g class="zone" data-id="legBL"><rect x="110" y="230" width="16" height="40" rx="8"/></g>
+      <g class="zone" data-id="legBR"><rect x="140" y="230" width="16" height="40" rx="8"/></g>
+      <ellipse cx="160" cy="280" rx="100" ry="10" fill="#e8ecf7" opacity="0.6"/>`
+  },
+  banana: {
+    name: 'The Banana', emoji: '🍌', size: 300,
+    svg: `
+      <g class="zone" data-id="body"><path d="M80 240 Q 60 160 100 80 Q 160 20 220 60 Q 240 80 220 100 Q 160 60 120 120 Q 100 180 120 240 Z"/></g>
+      <g class="zone" data-id="tip"><ellipse cx="80" cy="244" rx="10" ry="6"/></g>
+      <g class="zone" data-id="stem"><path d="M220 60 Q 240 40 260 50" stroke="#33385c" stroke-width="6" fill="none" stroke-linecap="round"/></g>
+      <ellipse cx="160" cy="280" rx="90" ry="10" fill="#e8ecf7" opacity="0.6"/>`
+  },
+  car: {
+    name: 'The Car', emoji: '🚗', size: 340,
+    svg: `
+      <g class="zone" data-id="body"><rect x="40" y="140" width="260" height="80" rx="16"/></g>
+      <g class="zone" data-id="top"><path d="M100 140 L 140 80 L 240 80 L 280 140 Z"/></g>
+      <g class="zone" data-id="windowL"><path d="M110 140 L 144 88 L 170 88 L 170 140 Z" fill="#b8e0ff"/></g>
+      <g class="zone" data-id="windowR"><path d="M180 140 L 180 88 L 236 88 L 270 140 Z" fill="#b8e0ff"/></g>
+      <g class="zone" data-id="wheelL"><circle cx="100" cy="220" r="28"/></g>
+      <g class="zone" data-id="wheelR"><circle cx="240" cy="220" r="28"/></g>
+      <g class="zone" data-id="hubcapL"><circle cx="100" cy="220" r="10" fill="#fff"/></g>
+      <g class="zone" data-id="hubcapR"><circle cx="240" cy="220" r="10" fill="#fff"/></g>
+      <g class="zone" data-id="headlight"><circle cx="296" cy="170" r="10"/></g>
+      <ellipse cx="170" cy="260" rx="120" ry="10" fill="#e8ecf7" opacity="0.6"/>`
+  },
+  mango: {
+    name: 'The Mango', emoji: '🥭', size: 300,
+    svg: `
+      <g class="zone" data-id="body"><ellipse cx="150" cy="160" rx="80" ry="100"/></g>
+      <g class="zone" data-id="stem"><path d="M150 60 Q 160 40 170 50" stroke="#33385c" stroke-width="5" fill="none" stroke-linecap="round"/></g>
+      <g class="zone" data-id="leaf"><path d="M170 50 Q 200 30 220 50 Q 200 60 170 50 Z"/></g>
+      <g class="zone" data-id="shine"><ellipse cx="120" cy="130" rx="16" ry="30" fill="#fff" opacity="0.45" transform="rotate(-15 120 130)"/></g>
+      <ellipse cx="150" cy="280" rx="90" ry="10" fill="#e8ecf7" opacity="0.6"/>`
   }
 };
 
@@ -1244,15 +1741,27 @@ const BADGES = [
   { id: 'first',      icon: '🏅', name: 'First Lesson',      desc: 'Complete your first lesson',           check: s => s.lessonsDone >= 1 },
   { id: 'stars10',    icon: '🌟', name: '10 Stars',          desc: 'Earn 10 stars',                        check: s => s.totalStars >= 10 },
   { id: 'stars50',    icon: '⭐', name: '50 Stars',          desc: 'Earn 50 stars',                        check: s => s.totalStars >= 50 },
+  { id: 'stars100',   icon: '💫', name: '100 Stars',         desc: 'Earn 100 stars',                       check: s => s.totalStars >= 100 },
   { id: 'letterChamp',icon: '🔤', name: 'Letter Champion',   desc: 'Finish 5 English lessons',             check: s => s.bySubject.english.lessons >= 5 },
+  { id: 'letterMaster',icon: '📖', name: 'Letter Master',     desc: 'Finish 10 English lessons',            check: s => s.bySubject.english.lessons >= 10 },
   { id: 'mathExplorer',icon: '🔢', name: 'Maths Explorer',   desc: 'Finish 5 Maths lessons',               check: s => s.bySubject.maths.lessons >= 5 },
+  { id: 'mathMaster', icon: '🧮', name: 'Maths Master',      desc: 'Finish 10 Maths lessons',              check: s => s.bySubject.maths.lessons >= 10 },
   { id: 'scienceBuddy',icon: '🔬', name: 'Science Buddy',    desc: 'Finish 3 Science lessons',             check: s => s.bySubject.science.lessons >= 3 },
+  { id: 'scienceStar', icon: '🧪', name: 'Science Star',     desc: 'Finish 7 Science lessons',             check: s => s.bySubject.science.lessons >= 7 },
   { id: 'worldFriend',icon: '🌍', name: 'World Friend',      desc: 'Finish 3 SST lessons',                 check: s => s.bySubject.sst.lessons >= 3 },
+  { id: 'worldExplorer',icon: '🗺️', name: 'World Explorer',  desc: 'Finish 7 SST lessons',                 check: s => s.bySubject.sst.lessons >= 7 },
   { id: 'artist',     icon: '🎨', name: 'Creative Artist',   desc: 'Finish 3 Creative activities',         check: s => s.bySubject.creative.lessons >= 3 },
+  { id: 'artMaster',  icon: '🖼️', name: 'Art Master',        desc: 'Finish 8 Creative activities',         check: s => s.bySubject.creative.lessons >= 8 },
   { id: 'traceStar',  icon: '✏️', name: 'Tracing Star',      desc: 'Finish 3 tracings',                    check: s => (s.activityCount.tracing || 0) >= 3 },
+  { id: 'traceChamp', icon: '🖊️', name: 'Tracing Champion',  desc: 'Finish 8 tracings',                    check: s => (s.activityCount.tracing || 0) >= 8 },
   { id: 'colorWiz',   icon: '🖍️', name: 'Color Wizard',      desc: 'Finish 3 colorings',                   check: s => (s.activityCount.coloring || 0) >= 3 },
+  { id: 'colorChamp', icon: '🌈', name: 'Color Champion',    desc: 'Finish 8 colorings',                   check: s => (s.activityCount.coloring || 0) >= 8 },
   { id: 'gamePlayer', icon: '🎮', name: 'Game Player',       desc: 'Play 3 games',                         check: s => (s.activityCount.games || 0) >= 3 },
-  { id: 'hero',       icon: '🏆', name: 'Learning Hero',     desc: 'Complete 10 lessons',                  check: s => s.lessonsDone >= 10 }
+  { id: 'gameChamp',  icon: '🏆', name: 'Game Champion',     desc: 'Play 10 games',                        check: s => (s.activityCount.games || 0) >= 10 },
+  { id: 'hero',       icon: '🏆', name: 'Learning Hero',     desc: 'Complete 10 lessons',                  check: s => s.lessonsDone >= 10 },
+  { id: 'superHero',  icon: '🦸', name: 'Super Learner',     desc: 'Complete 25 lessons',                  check: s => s.lessonsDone >= 25 },
+  { id: 'songStar',   icon: '🎵', name: 'Song Star',         desc: 'Listen to 3 songs',                    check: s => (s.activityCount.songs || 0) >= 3 },
+  { id: 'safeKid',    icon: '🛡️', name: 'Safety Star',       desc: 'Complete 2 safety lessons',            check: s => s.lessonsDone >= 2 }
 ];
 
 /* ------------------------------------------------------------------ */
@@ -1282,37 +1791,37 @@ const KINDER_AREAS = [
   {
     id: 'counting', icon: '🔢', name: 'COUNTING', label: 'Counting & Numbers', color: '#f99a1c',
     speak: 'Counting and numbers! Let us count together!',
-    lessons: { baby: ['b-m1', 'b-m2', 'b-m4'], middle: ['m-m1', 'm-m2'], top: ['t-m1', 't-m2'] },
+    lessons: { baby: ['b-m1', 'b-m2', 'b-m4', 'b-m5', 'b-m6', 'b-m8', 'b-m9', 'b-m10'], middle: ['m-m1', 'm-m2', 'm-m4', 'm-m5', 'm-m6', 'm-m7', 'm-m8'], top: ['t-m1', 't-m2', 't-m4', 't-m5', 't-m6', 't-m7', 't-m8'] },
     game: 'counting'
   },
   {
     id: 'letters', icon: '🔤', name: 'LETTERS', label: 'Letters & Sounds', color: '#2f7de1',
     speak: 'Letters and sounds! Let us say our letters!',
-    lessons: { baby: ['b-e1', 'b-e2', 'b-e4'], middle: ['m-e1', 'm-e2'], top: ['t-e1', 't-e2'] },
+    lessons: { baby: ['b-e1', 'b-e2', 'b-e4', 'b-e5', 'b-e6', 'b-e7', 'b-e10'], middle: ['m-e1', 'm-e2', 'm-e4', 'm-e5', 'm-e6', 'm-e7', 'm-e8'], top: ['t-e1', 't-e2', 't-e4', 't-e5', 't-e6', 't-e7'] },
     game: 'letters'
   },
   {
     id: 'colours', icon: '🎨', name: 'COLOURS', label: 'Colours & Shading', color: '#ec4899',
     speak: 'Colours! Red, blue, yellow — let us play with colours!',
-    lessons: { baby: ['b-c4', 'b-c1'], middle: ['m-c3', 'm-c1'], top: ['t-c1'] },
+    lessons: { baby: ['b-c4', 'b-c1', 'b-c8'], middle: ['m-c3', 'm-c1', 'm-c8'], top: ['t-c1'] },
     game: 'colors'
   },
   {
     id: 'drawing', icon: '✏️', name: 'DRAWING', label: 'Drawing & Tracing', color: '#14b8a6',
     speak: 'Let us draw and trace together!',
-    lessons: { baby: ['b-c2'], middle: ['m-c2'], top: ['t-c2', 't-c3'] },
+    lessons: { baby: ['b-c2', 'b-c6', 'b-c7'], middle: ['m-c2', 'm-c5', 'm-c6'], top: ['t-c2', 't-c3', 't-c5', 't-c6'] },
     builtin: [{ id: 'draw', icon: '🖼️', name: 'Free Draw', hash: '#/draw' }]
   },
   {
     id: 'shapes', icon: '🔺', name: 'SHAPES', label: 'Shapes', color: '#a855f7',
     speak: 'Shapes! Circles, squares and triangles!',
-    lessons: { baby: ['b-m3'], middle: ['m-m3'], top: ['t-m3'] },
+    lessons: { baby: ['b-m3', 'b-m9'], middle: ['m-m3'], top: ['t-m3', 't-c7'] },
     game: 'shapes'
   },
   {
     id: 'puzzles', icon: '🧩', name: 'PUZZLES', label: 'Matching & Puzzles', color: '#f97316',
     speak: 'Let us play matching and puzzles!',
-    lessons: { baby: ['b-c3'], middle: ['m-c3'], top: ['t-m3'] },
+    lessons: { baby: ['b-c3', 'b-e3', 'b-e8', 'b-e9'], middle: ['m-c3', 'm-e3'], top: ['t-m3'] },
     game: 'memory',
     builtin: [{ id: 'match', icon: '🧩', name: 'Matching', hash: '#/matching' }]
   },
@@ -1324,17 +1833,47 @@ const KINDER_AREAS = [
   {
     id: 'animals', icon: '🐶', name: 'ANIMALS', label: 'Animals & Nature', color: '#2fa96b',
     speak: 'Animals! What does the dog say? Woof woof!',
-    lessons: { baby: ['b-s2', 'b-s4'], middle: ['m-s3', 'm-s2'], top: ['t-s2', 't-s3'] }
+    lessons: { baby: ['b-s2', 'b-s4', 'b-s8'], middle: ['m-s3', 'm-s4', 'm-s5', 'm-s2'], top: ['t-s3', 't-s4', 't-s7'] }
+  },
+  {
+    id: 'reading', icon: '📚', name: 'READING', label: 'Reading & Stories', color: '#0891b2', more: true,
+    speak: 'Let us read together!',
+    lessons: { baby: [], middle: ['m-e3', 'm-e7'], top: ['t-e3', 't-e5', 't-e6', 't-e7'] }
   },
   {
     id: 'body', icon: '🧼', name: 'MY BODY', label: 'My Body & Personal Care', color: '#0ea5e9', more: true,
     speak: 'My body! Let us learn about our body!',
-    lessons: { baby: ['b-s1'], middle: ['m-sst3'], top: ['t-s1'] }
+    lessons: { baby: ['b-s1', 'b-s5', 'b-s7'], middle: ['m-sst3', 'm-s6', 'm-s7'], top: ['t-s1'] }
   },
   {
     id: 'family', icon: '👨‍👩‍👧', name: 'MY FAMILY', label: 'My Family & Home', color: '#f59e0b', more: true,
     speak: 'My family and my home!',
-    lessons: { baby: ['b-sst1', 'b-sst2'], middle: ['m-sst1', 'm-sst2'], top: ['t-sst3'] }
+    lessons: { baby: ['b-sst1', 'b-sst2', 'b-sst7'], middle: ['m-sst1', 'm-sst2'], top: ['t-sst3'] }
+  },
+  {
+    id: 'safety', icon: '🚸', name: 'SAFETY', label: 'Safety & Good Manners', color: '#dc2626', more: true,
+    speak: 'Let us learn how to stay safe!',
+    lessons: { baby: ['b-sst3', 'b-sst4', 'b-sst5'], middle: ['m-sst6'], top: ['t-s5', 't-s6'] }
+  },
+  {
+    id: 'emotions', icon: '😊', name: 'FEELINGS', label: 'My Feelings & Emotions', color: '#d946ef', more: true,
+    speak: 'Let us learn about our feelings!',
+    lessons: { baby: ['b-sst6'], middle: [], top: ['t-sst6'] }
+  },
+  {
+    id: 'transport', icon: '🚌', name: 'TRANSPORT', label: 'Transport & Travel', color: '#059669', more: true,
+    speak: 'Let us learn about transport!',
+    lessons: { baby: [], middle: ['m-sst5'], top: ['t-sst2', 't-sst4'] }
+  },
+  {
+    id: 'time', icon: '🕐', name: 'TIME', label: 'Time, Days & Weather', color: '#7c3aed', more: true,
+    speak: 'Let us learn about time and weather!',
+    lessons: { baby: ['b-s9'], middle: ['m-s2'], top: ['t-m7', 't-m8', 't-sst5'] }
+  },
+  {
+    id: 'coloring', icon: '🖍️', name: 'COLORING', label: 'Coloring Pictures', color: '#f43f5e', more: true,
+    speak: 'Let us color beautiful pictures!',
+    lessons: { baby: ['b-c1', 'b-c5', 'b-c9'], middle: ['m-c1', 'm-c4', 'm-c7'], top: ['t-c1', 't-c4', 't-c8'] }
   }
 ];
 
@@ -1360,5 +1899,5 @@ window.LLData = {
   SUBJECTS, SUBJECT_ORDER, CLASSES, CLASS_ORDER, COLORS, SHAPE_NAMES, shapeSVG,
   CHARACTERS, AVATARS, avatarHTML, LETTER_PICS, LETTERS,
   CURRICULUM, TRACE_TEMPLATES, TRACE_LABELS, COLORING_TEMPLATES, BADGES,
-  ADVENTURE_TASKS, KINDER_AREAS, areaForLesson, isKinderClass, shuffle, starPoints
+  ADVENTURE_TASKS, KINDER_AREAS, areaForLesson, isKinderClass, shuffle, starPoints, polygonPoints
 };

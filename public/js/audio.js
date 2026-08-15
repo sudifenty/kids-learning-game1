@@ -21,25 +21,29 @@ window.LLAudio = (function () {
         if (AC) ctx = new AC();
       } catch (e) { ctx = null; }
     }
-    if (ctx && ctx.state === 'suspended') ctx.resume().catch(() => {});
+    if (ctx && ctx.state === 'suspended') {
+      try { ctx.resume().catch(() => {}); } catch (e) {}
+    }
     return ctx;
   }
 
   /* ---------- simple synthesized tones ---------- */
   function tone(freq, start, dur, type, vol, endFreq) {
     if (!ensureCtx()) return;
-    const t0 = ctx.currentTime + (start || 0);
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = type || 'sine';
-    osc.frequency.setValueAtTime(freq, t0);
-    if (endFreq) osc.frequency.exponentialRampToValueAtTime(endFreq, t0 + dur);
-    gain.gain.setValueAtTime(0.0001, t0);
-    gain.gain.exponentialRampToValueAtTime(vol || 0.2, t0 + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-    osc.connect(gain).connect(ctx.destination);
-    osc.start(t0);
-    osc.stop(t0 + dur + 0.05);
+    try {
+      const t0 = ctx.currentTime + (start || 0);
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type || 'sine';
+      osc.frequency.setValueAtTime(freq, t0);
+      if (endFreq) osc.frequency.exponentialRampToValueAtTime(endFreq, t0 + dur);
+      gain.gain.setValueAtTime(0.0001, t0);
+      gain.gain.exponentialRampToValueAtTime(vol || 0.2, t0 + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(t0);
+      osc.stop(t0 + dur + 0.05);
+    } catch (e) { /* tone failed — not critical */ }
   }
 
   const sfx = {
@@ -81,24 +85,130 @@ window.LLAudio = (function () {
     window.speechSynthesis.onvoiceschanged = loadVoices;
   }
 
+  /* ---------- mobile audio unlock (critical for phones) ----------
+     Mobile browsers suspend audio until a real user gesture. We:
+     1. Unlock on the first tap (one-time silent play to unblock audio)
+     2. Keep re-unlocking on EVERY tap (some phones re-suspend aggressively)
+     3. Resume AudioContext when the tab comes back to foreground
+     4. Work around the iOS speechSynthesis "15-second freeze" bug
+  */
+  let mobileUnlocked = false;
+
+  function unlockMobileAudio() {
+    /* 1. Resume AudioContext */
+    try { ensureCtx(); } catch (e) {}
+
+    /* 2. Reload voices (some mobile browsers lazy-load them) */
+    loadVoices();
+
+    /* 3. Silent speech synthesis utterance to unblock TTS */
+    try {
+      if (window.speechSynthesis) {
+        const u = new SpeechSynthesisUtterance(' ');
+        u.volume = 0.01;
+        u.rate = 1;
+        u.pitch = 1;
+        window.speechSynthesis.speak(u);
+      }
+    } catch (e) {}
+
+    /* 4. Silent AudioContext tone to unblock WebAudio */
+    try {
+      if (ctx && ctx.state === 'running') {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        gain.gain.value = 0.001;
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(0);
+        osc.stop(0.01);
+      }
+    } catch (e) {}
+
+    mobileUnlocked = true;
+  }
+
+  /* First-time unlock on any user gesture */
   function armMobileUnlock() {
-    const unlock = () => {
-      try { ensureCtx(); } catch (e) { /* ignore */ }
-      loadVoices();
-      try {
-        if (window.speechSynthesis) {
-          const u = new SpeechSynthesisUtterance(' ');
-          u.volume = 0;
-          u.rate = 1;
-          window.speechSynthesis.speak(u);
-        }
-      } catch (e) { /* ignore */ }
+    const firstUnlock = () => {
+      unlockMobileAudio();
     };
-    ['pointerdown', 'touchend', 'click', 'keydown'].forEach(evt =>
-      window.addEventListener(evt, unlock, { once: true, passive: true })
+    ['pointerdown', 'touchstart', 'touchend', 'click', 'keydown'].forEach(evt =>
+      window.addEventListener(evt, firstUnlock, { once: true, passive: true })
     );
+
+    /* Keep re-unlocking on every tap — some phones re-suspend audio context
+       aggressively, especially after navigation or screen transitions */
+    const keepAlive = () => {
+      try { ensureCtx(); } catch (e) {}
+      /* iOS speechSynthesis bug: after ~15s it freezes. Cancel keeps it alive. */
+      try {
+        if (window.speechSynthesis && speechSynthesis.speaking && !speaking) {
+          speechSynthesis.cancel();
+        }
+      } catch (e) {}
+    };
+    window.addEventListener('pointerdown', keepAlive, { passive: true });
+    window.addEventListener('touchstart', keepAlive, { passive: true });
   }
   armMobileUnlock();
+
+  /* Resume audio when tab returns to foreground (critical for mobile) */
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      try { ensureCtx(); } catch (e) {}
+      loadVoices();
+      /* iOS: speechSynthesis may be stuck after tab switch — cancel to unstick */
+      try {
+        if (window.speechSynthesis) {
+          speechSynthesis.cancel();
+          speaking = false;
+        }
+      } catch (e) {}
+      /* Resume background music if it was playing */
+      if (bgmOn && bgmAudio) {
+        try { bgmAudio.play().catch(() => {}); } catch (e) {}
+      }
+    } else {
+      /* Tab going to background — pause BGM to save battery */
+      if (bgmAudio) {
+        try { bgmAudio.pause(); } catch (e) {}
+      }
+    }
+  });
+
+  /* Handle page freeze/unfreeze (modern mobile browsers) */
+  if ('onfreeze' in document) {
+    document.addEventListener('freeze', () => {
+      try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch (e) {}
+      speaking = false;
+    });
+    document.addEventListener('resume', () => {
+      try { ensureCtx(); } catch (e) {}
+      loadVoices();
+    });
+  }
+
+  /* iOS speechSynthesis keepalive: iOS kills speech after ~15 seconds of
+     continuous use. This timer pokes it periodically to keep it alive. */
+  let iosKeepalive = null;
+  function startIosKeepalive() {
+    if (iosKeepalive) return;
+    iosKeepalive = setInterval(() => {
+      try {
+        if (window.speechSynthesis && speechSynthesis.speaking) {
+          /* Poke: pause and immediately resume to prevent the 15s freeze */
+          speechSynthesis.pause();
+          speechSynthesis.resume();
+        } else {
+          /* Not speaking anymore — stop the timer */
+          stopIosKeepalive();
+        }
+      } catch (e) { stopIosKeepalive(); }
+    }, 10000);
+  }
+  function stopIosKeepalive() {
+    if (iosKeepalive) { clearInterval(iosKeepalive); iosKeepalive = null; }
+  }
 
   function pickVoice() {
     const preferred = ['Google US English', 'Samantha', 'Microsoft Zira', 'Microsoft Aria', 'Karen', 'Moira', 'Daniel', 'en-US', 'en-GB', 'en'];
@@ -173,11 +283,21 @@ window.LLAudio = (function () {
       u.volume = muted ? 0 : Math.max(0.05, speakVolume());
       u.lang = (v && v.lang) || 'en-US';
       let done = false;
-      const finish = () => { if (done) return; done = true; if (speakWatchdog) clearTimeout(speakWatchdog); speaking = false; bgmDuck(false); if (opts.onend) opts.onend(); };
-      u.onstart = () => { speaking = true; if (opts.onstart) opts.onstart(); };
+      const finish = () => { if (done) return; done = true; stopIosKeepalive(); if (speakWatchdog) clearTimeout(speakWatchdog); speaking = false; bgmDuck(false); if (opts.onend) opts.onend(); };
+      u.onstart = () => { speaking = true; startIosKeepalive(); if (opts.onstart) opts.onstart(); };
       u.onend = finish;
       u.onerror = finish;
       speechSynthesis.speak(u);
+      /* On mobile, speechSynthesis.speak() sometimes silently fails.
+         We retry once after a short delay if speech hasn't started. */
+      setTimeout(() => {
+        if (!done && !speaking) {
+          try {
+            speechSynthesis.cancel();
+            speechSynthesis.speak(u);
+          } catch (e) {}
+        }
+      }, 200);
       speakWatchdog = setTimeout(finish, 900 + text.length * 85 + 1500);
       return true;
     } catch (e) {
@@ -208,7 +328,16 @@ window.LLAudio = (function () {
       speaking = true;
       if (opts.onstart) opts.onstart();
       const p = a.play();
-      if (p && p.catch) p.catch(() => { try { a.pause(); } catch (e) {} finish(); });
+      if (p && p.catch) {
+        p.catch(() => {
+          /* Mobile play() rejected — retry once after ensuring context */
+          try { ensureCtx(); } catch (e) {}
+          const retry = a.play();
+          if (retry && retry.catch) {
+            retry.catch(() => { try { a.pause(); } catch (e) {} finish(); });
+          }
+        });
+      }
       speakWatchdog = setTimeout(finish, 900 + (opts.durMs || (String(opts.text || '').length * 85 + 2500)));
       return true;
     } catch (e) { return false; }
@@ -281,6 +410,7 @@ window.LLAudio = (function () {
 
   function stop() {
     speakToken++;
+    stopIosKeepalive();
     try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch (e) {}
     if (speakAudio) { try { speakAudio.pause(); } catch (e) {} speakAudio = null; }
     if (speakWatchdog) clearTimeout(speakWatchdog);
@@ -307,13 +437,28 @@ window.LLAudio = (function () {
     if (bgmOn) {
       try {
         if (typeof Audio === 'undefined') return;
-        if (bgmAudio) { bgmAudio.volume = bgmDucked ? 0.05 : 0.12; return; }
+        if (bgmAudio) {
+          bgmAudio.volume = bgmDucked ? 0.05 : 0.12;
+          /* Try to resume if paused (may have been paused by visibility change) */
+          const p = bgmAudio.play();
+          if (p && p.catch) p.catch(() => {});
+          return;
+        }
+        ensureCtx();
         const a = new Audio(bgmUrl());
         a.loop = true;
         a.volume = bgmDucked ? 0.05 : 0.12;
-        a.preload = 'none';
+        a.preload = 'auto';
         const p = a.play();
-        if (p && p.catch) p.catch(() => {});
+        if (p && p.catch) {
+          p.catch(() => {
+            /* Mobile rejected — retry after short delay */
+            setTimeout(() => {
+              const r = a.play();
+              if (r && r.catch) r.catch(() => {});
+            }, 100);
+          });
+        }
         bgmAudio = a;
       } catch (e) { /* ignore */ }
     } else {
@@ -364,12 +509,22 @@ window.LLAudio = (function () {
       const R = window.LLRewards;
       if (R && R.state && R.state.celebrationOn === false) return duration;
       if (celebAudio) { try { celebAudio.pause(); } catch (e) {} }
+      /* Ensure audio context is running before playing celebration */
+      ensureCtx();
       const a = new Audio();
       a.src = celebSrc(cfg.id);
       a.volume = 0.9;
       a.preload = 'auto';
       const p = a.play();
-      if (p && p.catch) p.catch(() => {});
+      if (p && p.catch) {
+        p.catch(() => {
+          /* Mobile rejected autoplay — retry once after a tick */
+          setTimeout(() => {
+            const r = a.play();
+            if (r && r.catch) r.catch(() => { sfx.celebrate(); });
+          }, 50);
+        });
+      }
       celebAudio = a;
     } catch (e) { sfx.celebrate(); }
     return duration;

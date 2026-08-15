@@ -7,7 +7,7 @@
    - Neural TTS clips (/api/tts/cache/): cache-first so heard sentences stay offline.
    ========================================================================== */
 
-const CACHE = 'lets-learn-v22';
+const CACHE = 'lets-learn-v23';
 const SHELL = [
   '/',
   'index.html',

@@ -739,7 +739,7 @@ window.LLNav = (function () {
     const options = {
       letter: cls === 'baby' || cls === 'middle' ? ['A', 'B', 'C'] : ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
       number: cls === 'baby' || cls === 'middle' ? ['1', '2', '3'] : ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
-      shape: ['circle', 'square', 'triangle', 'star', 'heart', 'diamond'],
+      shape: ['circle', 'square', 'triangle', 'star', 'heart', 'diamond', 'pentagon', 'hexagon'],
       line: ['straight', 'wave', 'zigzag', 'spiral']
     };
     if (kind && which && D.TRACE_TEMPLATES[kind] && D.TRACE_TEMPLATES[kind][which]) {
@@ -890,7 +890,7 @@ window.LLNav = (function () {
     body.innerHTML = `
       <div class="lesson-stage">
         <div class="shape-art-tray">
-          ${['circle', 'square', 'triangle', 'star', 'heart', 'diamond'].map(s =>
+          ${['circle', 'square', 'triangle', 'star', 'heart', 'diamond', 'pentagon', 'hexagon'].map(s =>
             `<button type="button" class="sa-shape" data-shape="${s}">${D2.shapeSVG(s, 44, '#2f7de1')}</button>`).join('')}
         </div>
         <div class="palette">
