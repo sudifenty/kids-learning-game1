@@ -180,43 +180,18 @@ academic structure remain exactly as before. The kindergarten experience and
 the primary experience are two distinct worlds in the same app.
 
 ## 🗣️ The Friendly Teacher Voice
-## 🗣️ The Friendly Teacher Voice
 
 Narration is a **natural, warm, child-friendly teacher voice** — not robotic
 browser speech:
 
-<<<<<<< HEAD
-* **Natural neural TTS served by our own app**: `POST /api/tts` generates
-crisp, calm, warm narration clips using **Microsoft Edge neural voices** by
-default — a genuinely natural, friendly teacher voice (`en-GB-SoniaNeural`;
-override with `LETSLEARN_TTS_VOICE`). It's **completely free** — no API key,
-no subscription (served via the MIT-licensed `msedge-tts` package). Google
-Translate TTS remains as an automatic fallback if the neural voice is
-unreachable. Every clip is **disk-cached** so the same sentence is never
-re-generated.
-* **Sentence-by-sentence read-along**: narration is split into sentences with
-**natural pauses** (longer before questions). The sentence currently being
-spoken is **highlighted** and the page scrolls to it gently — connecting
-spoken word, written word and picture.
-* **Child-friendly player** on every narrated step: ▶ Play / ⏸ Pause /
-🔁 Replay / 🔊 volume / 🐢 **Slow • Normal • Fast** (Slow is the default —
-≈0.78×, like a patient teacher). No technical settings for children.
-* **Pronunciation preprocessing**: numbers become words ("5 − 2" →
-"five minus two"), abbreviations expand ("SST" → "S.S.T."), math symbols
-are spoken clearly.
-* **Fallback chain**: if the server TTS is unreachable, the browser's speech
-synthesis takes over automatically with a tuned voice — the audio button
-never breaks.
-* **Soft background music** (original, CC0): default OFF; parents can turn it
-on, and it **ducks to a whisper while the teacher speaks** so the voice is
-always clearly louder.
-* Parent Area → Settings: 🔊 learning sounds, 🎵 celebration music,
-🎉 dance \& confetti, 🎵 soft background music.
-=======
 - **Natural neural TTS served by our own app**: `POST /api/tts` generates
-  crisp, calm narration clips (Google TTS by default; optionally Microsoft
-  Edge neural voices with `LETSLEARN_TTS=edge` + `npm i edge-tts`). Every
-  clip is **disk-cached** so the same sentence is never re-generated.
+  crisp, calm, warm narration clips using **Microsoft Edge neural voices** by
+  default — a genuinely natural, friendly teacher voice (`en-GB-SoniaNeural`;
+  override with `LETSLEARN_TTS_VOICE`). It's **completely free** — no API key,
+  no subscription (served via the MIT-licensed `msedge-tts` package). Google
+  Translate TTS remains as an automatic fallback if the neural voice is
+  unreachable. Every clip is **disk-cached** so the same sentence is never
+  re-generated.
 - **Sentence-by-sentence read-along**: narration is split into sentences with
   **natural pauses** (longer before questions). The sentence currently being
   spoken is **highlighted** and the page scrolls to it gently — connecting
@@ -235,9 +210,7 @@ always clearly louder.
   always clearly louder.
 - Parent Area → Settings: 🔊 learning sounds, 🎵 celebration music,
   🎉 dance & confetti, 🎵 soft background music.
->>>>>>> 49c3d674965518a24fc0b0fec2eaca7fd622782d
 
-## 🎉 Celebration system
 ## 🎉 Celebration system
 
 When a child succeeds, Let's Learn celebrates **inside the app**:
@@ -266,7 +239,6 @@ Parents control the experience in the Parent Area → Settings:
 Music only plays for real achievements — never for ordinary navigation.
 
 ## ✅ Activity accuracy guarantee
-## ✅ Activity accuracy guarantee
 
 Every educational activity follows the rule:
 
@@ -287,142 +259,6 @@ Every educational activity follows the rule:
   big on phones, tablets and desktops; flex layouts space countable objects
   so each one is individually identifiable.
 
-## 🧪 Tests
-## 🧪 Tests
-## 🧸 Kindergarten experience (Baby / Middle / Top Class)
-
-Kindergarten learners are NOT shown a formal primary-school portal. Instead
-they see **large playful activity-area cards** — no "subjects", no "lessons":
-
-```
-🔢 COUNTING   🔤 LETTERS   🎨 COLOURS   ✏️ DRAWING
-🔺 SHAPES     🧩 PUZZLES   🎵 SONGS     🐶 ANIMALS
-```
-
-- **Home screen** asks *"What do you want to learn?"* with big visual cards.
-- **Learn screen** adds a *"More"* row: 🧼 My Body, 👨‍👩‍👧 My Family & Home.
-- Each area opens **"Choose an activity"** — simple activity cards (star
-  progress, "▶ Play" pill on the next one) plus related **mini-games**
-  (Counting Game in 🔢, Memory in 🧩, Shape Sorter in 🔺…) and extras
-  (Song Time 🎵, Free Draw ✏️).
-- The **teacher voice** welcomes each area: *"Counting and numbers! Let us
-  count together!"* — visuals first, spoken words second, minimal text.
-- **Journey & Progress** follow the activity areas for kindergarten.
-- Everything stays playful: no "Lesson 1/2/3", no "subjects", no paragraphs.
-
-**Primary (P1–P3) is completely unchanged** — subjects, lessons, quizzes and
-academic structure remain exactly as before. The kindergarten experience and
-the primary experience are two distinct worlds in the same app.
-
-## 🗣️ The Friendly Teacher Voice
-## 🗣️ The Friendly Teacher Voice
-
-Narration is a **natural, warm, child-friendly teacher voice** — not robotic
-browser speech:
-
-<<<<<<< HEAD
-* **Natural neural TTS served by our own app**: `POST /api/tts` generates
-crisp, calm, warm narration clips using **Microsoft Edge neural voices** by
-default — a genuinely natural, friendly teacher voice (`en-GB-SoniaNeural`;
-override with `LETSLEARN_TTS_VOICE`). It's **completely free** — no API key,
-no subscription (served via the MIT-licensed `msedge-tts` package). Google
-Translate TTS remains as an automatic fallback if the neural voice is
-unreachable. Every clip is **disk-cached** so the same sentence is never
-re-generated.
-* **Sentence-by-sentence read-along**: narration is split into sentences with
-**natural pauses** (longer before questions). The sentence currently being
-spoken is **highlighted** and the page scrolls to it gently — connecting
-spoken word, written word and picture.
-* **Child-friendly player** on every narrated step: ▶ Play / ⏸ Pause /
-🔁 Replay / 🔊 volume / 🐢 **Slow • Normal • Fast** (Slow is the default —
-≈0.78×, like a patient teacher). No technical settings for children.
-* **Pronunciation preprocessing**: numbers become words ("5 − 2" →
-"five minus two"), abbreviations expand ("SST" → "S.S.T."), math symbols
-are spoken clearly.
-* **Fallback chain**: if the server TTS is unreachable, the browser's speech
-synthesis takes over automatically with a tuned voice — the audio button
-never breaks.
-* **Soft background music** (original, CC0): default OFF; parents can turn it
-on, and it **ducks to a whisper while the teacher speaks** so the voice is
-always clearly louder.
-* Parent Area → Settings: 🔊 learning sounds, 🎵 celebration music,
-🎉 dance \& confetti, 🎵 soft background music.
-=======
-- **Natural neural TTS served by our own app**: `POST /api/tts` generates
-  crisp, calm narration clips (Google TTS by default; optionally Microsoft
-  Edge neural voices with `LETSLEARN_TTS=edge` + `npm i edge-tts`). Every
-  clip is **disk-cached** so the same sentence is never re-generated.
-- **Sentence-by-sentence read-along**: narration is split into sentences with
-  **natural pauses** (longer before questions). The sentence currently being
-  spoken is **highlighted** and the page scrolls to it gently — connecting
-  spoken word, written word and picture.
-- **Child-friendly player** on every narrated step: ▶ Play / ⏸ Pause /
-  🔁 Replay / 🔊 volume / 🐢 **Slow • Normal • Fast** (Slow is the default —
-  ≈0.78×, like a patient teacher). No technical settings for children.
-- **Pronunciation preprocessing**: numbers become words ("5 − 2" →
-  "five minus two"), abbreviations expand ("SST" → "S.S.T."), math symbols
-  are spoken clearly.
-- **Fallback chain**: if the server TTS is unreachable, the browser's speech
-  synthesis takes over automatically with a tuned voice — the audio button
-  never breaks.
-- **Soft background music** (original, CC0): default OFF; parents can turn it
-  on, and it **ducks to a whisper while the teacher speaks** so the voice is
-  always clearly louder.
-- Parent Area → Settings: 🔊 learning sounds, 🎵 celebration music,
-  🎉 dance & confetti, 🎵 soft background music.
->>>>>>> 49c3d674965518a24fc0b0fec2eaca7fd622782d
-
-## 🎉 Celebration system
-## 🎉 Celebration system
-
-When a child succeeds, Let's Learn celebrates **inside the app**:
-
-- **🎉 Correct answer** → "AMAZING!" + the child's own avatar character
-  **dances** (bounce/twist/step) while an **original success jingle** plays
-  (~2s), then auto-scrolls to the next activity.
-- **🏆 Game / milestone complete** → bigger dance + confetti + fanfare (~3s).
-- **🌟 Lesson complete** → completion tune + confetti + any **new badge**
-  appears on the results screen.
-
-The dance is **synchronized to the music**: it starts when the jingle starts
-and the overlay closes when the music ends (tap to skip early). Jingles are
-**original Let's Learn compositions** (CC0 — see `media/LICENSES.md` §6),
-served from `/media/audio/celebration/` and embedded in the standalone build.
-No third-party music, no external players.
-
-Parents control the experience in the Parent Area → Settings:
-
-```
-🔊 Learning sounds     On / Off
-🎵 Celebration music   On / Off
-🎉 Dance & confetti    On / Off
-```
-
-Music only plays for real achievements — never for ordinary navigation.
-
-## ✅ Activity accuracy guarantee
-## ✅ Activity accuracy guarantee
-
-Every educational activity follows the rule:
-
-> **WHAT THE CHILD SEES == WHAT THE CHILD IS ASKED == WHAT THE SYSTEM EXPECTS**
-
-- **Counting** — the number of objects rendered IS the correct answer; answer
-  options are generated from the same value (`countOptions(n)`), so a mismatch
-  is impossible by construction.
-- **Math visuals** — `+` shows two groups joined, `−` shows objects crossed
-  out (taken away), `×` shows rows of groups (e.g. 2 groups of 3).
-- **`js/validate.js`** — an internal validator checks every step
-  (answer ∈ options, unique options, subtraction a>b, multiplication ≤30
-  items, no compare ties, matching pairs well-formed, tracing/coloring
-  templates exist, letters have audio data). It runs at boot (dev console
-  only — children never see it) and as a runtime guard: an invalid step is
-  skipped instead of shown.
-- **Large, separated objects** — responsive `clamp()` sizing keeps objects
-  big on phones, tablets and desktops; flex layouts space countable objects
-  so each one is individually identifiable.
-
-## 🧪 Tests
 ## 🧪 Tests
 
 ```
@@ -430,8 +266,6 @@ node tests/test1-screens.js   # full app journey (needs jsdom + server on :3000)
 node tests/test2-games.js     # lessons, games, tracing, coloring
 node tests/test3-media.js     # media libraries, players, admin
 ```
-
-## 🧑‍🏫 Notes for parents & teachers
 
 ## 🧑‍🏫 Notes for parents & teachers
 
