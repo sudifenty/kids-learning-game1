@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta name="description" content="🌈 Let's Learn — a colorful learning world for Baby Class to Primary 3 children: lessons, games, coloring, tracing and rewards."/>
+  <meta name="theme-color" content="#8ed3ff"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+  <meta name="apple-mobile-web-app-title" content="Let's Learn"/>
+  <meta name="application-name" content="Let's Learn"/>
+  <title>🌈 Let's Learn</title>
+  <link rel="manifest" href="manifest.webmanifest"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png"/>
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png"/>
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png"/>
+  <link rel="stylesheet" href="css/fonts.css?v=22"/>
+  <link rel="stylesheet" href="css/style.css?v=22"/>
+  <link rel="stylesheet" href="css/home.css?v=22"/>
+  <link rel="stylesheet" href="css/activities.css?v=22"/>
+  <link rel="stylesheet" href="css/responsive.css?v=22"/>
+  <style>
+    /* inline fallback so the page never looks blank while JS boots */
+    #boot-splash {
+      position: fixed; inset: 0; z-index: 200;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: linear-gradient(180deg, #8ed3ff 0%, #cdeeff 60%, #e8f9ff 100%);
+      font-family: 'Comic Sans MS', 'Chalkboard SE', system-ui, sans-serif;
+      text-align: center; color: #33385c;
+    }
+    #boot-splash .bs-logo { font-size: 3.2rem; animation: bsFloat 2.2s ease-in-out infinite; }
+    #boot-splash .bs-title {
+      font-size: 2rem; font-weight: 800; margin-top: 6px; letter-spacing: 1px;
+      background: linear-gradient(90deg, #e8458b, #f99a1c, #2fa96b, #2f7de1, #8b5cf6);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    #boot-splash .bs-sub { margin-top: 8px; font-size: 1rem; font-weight: 600; color: #5a6088; }
+    #boot-splash .bs-dots { margin-top: 14px; font-size: 1.4rem; letter-spacing: 6px; animation: bsDots 1.2s ease infinite; }
+    @keyframes bsFloat { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-8px);} }
+    @keyframes bsDots { 0% { opacity: .3; } 50% { opacity: 1; } 100% { opacity: .3; } }
+    #fatal-error {
+      position: fixed; inset: 0; z-index: 300; display: none;
+      align-items: center; justify-content: center; text-align: center; padding: 24px;
+      background: #fff7d6; font-family: 'Comic Sans MS', system-ui, sans-serif; color: #33385c;
+    }
+    #fatal-error .fe-box { max-width: 480px; }
+    #fatal-error .fe-title { font-size: 1.6rem; font-weight: 800; }
+    #fatal-error .fe-msg { margin-top: 10px; font-size: 1rem; font-weight: 600; }
+    #fatal-error button {
+      margin-top: 18px; border: none; cursor: pointer; font-family: inherit; font-weight: 800; font-size: 1.1rem;
+      background: #35c46b; color: #fff; border-radius: 20px; padding: 14px 30px;
+      box-shadow: 0 6px 0 #1f9d4e;
+    }
+  </style>
+</head>
+<body>
+  <div id="boot-splash">
+    <div class="bs-logo">🌈</div>
+    <div class="bs-title">LET'S LEARN</div>
+    <div class="bs-sub">waking up your learning world…</div>
+    <div class="bs-dots">. . .</div>
+  </div>
+  <div id="app"></div>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <div id="offline-indicator" role="status" aria-live="polite" hidden
+       style="position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:400;
+              background:#2fa96b;color:#fff;font-family:'Comic Sans MS','Chalkboard SE',system-ui,sans-serif;
+              font-weight:800;font-size:.9rem;padding:9px 16px;border-radius:999px;
+              box-shadow:0 4px 0 #1f7d4e,0 6px 18px rgba(0,0,0,.18);white-space:nowrap;">
+    🌤️ Offline Mode — You Can Still Learn!
+  </div>
+  <div id="fatal-error" role="alert">
+    <div class="fe-box">
+      <div class="fe-title">😅 Oops — Let's Learn needs a refresh!</div>
+      <div class="fe-msg" id="fatal-msg">Something went wrong while starting up.</div>
+      <button type="button" onclick="location.reload()">🔄 Try again</button>
+    </div>
+  </div>
+  <noscript>
+    <div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;background:#fff7d6;font-family:sans-serif;color:#33385c;padding:24px">
+      <div><h2>🌈 Let's Learn</h2><p>This app needs JavaScript. Please enable JavaScript and refresh.</p></div>
+    </div>
+  </noscript>
+
+  <script>
+    /* If the app scripts never load (e.g. the file is opened as a static
+       preview without the server, or a script was blocked), explain what to
+       do instead of leaving an endless splash. The real app removes this
+       splash as soon as it boots. */
+    window.addEventListener('DOMContentLoaded', function () {
+      setTimeout(function () {
+        if (!window.LLApp) {
+          var s = document.getElementById('boot-splash');
+          if (s) {
+            s.innerHTML =
+              '<div class="bs-logo">🌈</div>' +
+              '<div class="bs-title">LET\'S LEARN</div>' +
+              '<div style="max-width:440px;margin-top:16px;line-height:1.6;font-weight:600;color:#5a6088">' +
+              'This view cannot load the app because the Let\'s Learn server is not reachable here.<br/><br/>' +
+              '👉 Open the <b>live app preview</b> (the "Let\'s Learn app" link in the chat) — or run ' +
+              '<b>npm start</b> in the lets-learn folder and open <b>http://localhost:3000</b> in your browser.' +
+              '</div>' +
+              '<button style="margin-top:20px;border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:1.05rem;background:#35c46b;color:#fff;border-radius:18px;padding:12px 26px" onclick="location.reload()">🔄 Try again</button>';
+          }
+        }
+      }, 2500);
+    });
+  </script>
+
+  <script src="js/data.js?v=22"></script>
+  <script src="js/validate.js?v=22"></script>
+  <script src="js/voice-library.js?v=22"></script>
+  <script src="js/audio.js?v=22"></script>
+  <script src="js/narration.js?v=22"></script>
+  <script src="js/rewards.js?v=22"></script>
+  <script src="js/tracing.js?v=22"></script>
+  <script src="js/coloring.js?v=22"></script>
+  <script src="js/games.js?v=22"></script>
+  <script src="js/lessons.js?v=22"></script>
+  <script src="js/media.js?v=22"></script>
+  <script src="js/puzzles.js?v=22"></script>
+  <script src="js/pwa.js?v=22"></script>
+  <script src="js/navigation.js?v=22"></script>
+  <script src="js/app.js?v=22"></script>
+</body>
+</html>

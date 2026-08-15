@@ -1,0 +1,289 @@
+/* Today's Adventure banner removed from the home screen */
+.adventure-banner { display: none !important; }
+/* ==========================================================================
+   🌈 LET'S LEARN — home.css
+   Welcome screen, setup flow, home screen, journey, progress, parent area.
+   ========================================================================== */
+
+/* ---------- welcome ---------- */
+.welcome-wrap {
+  min-height: calc(100vh - 130px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; gap: 8px;
+}
+.logo-hero { font-size: 5.5rem; line-height: 1; animation: floaty 3.5s ease-in-out infinite; }
+@keyframes floaty { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-10px);} }
+.title-hero {
+  font-size: clamp(2.6rem, 9vw, 4.2rem); font-weight: 800; letter-spacing: 1px;
+  background: linear-gradient(90deg, #e8458b, #f99a1c, #2fa96b, #2f7de1, #8b5cf6);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  text-shadow: 0 4px 0 rgba(255,255,255,0.7);
+  margin: 4px 0;
+}
+.welcome-line { font-size: 1.25rem; font-weight: 600; color: var(--ink-soft); }
+.welcome-line.big { font-size: 1.6rem; color: var(--ink); font-weight: 700; }
+.welcome-char { font-size: 3.6rem; margin: 8px 0; }
+.welcome-btn { margin-top: 26px; }
+.bouncy-letter { display: inline-block; animation: letterBounce 1.6s ease-in-out infinite; }
+@keyframes letterBounce { 0%,100% { transform: translateY(0);} 30% { transform: translateY(-8px);} }
+
+/* ---------- setup screens ---------- */
+.setup-wrap { max-width: 780px; margin: 0 auto; }
+.class-grid {
+  display: grid; gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  margin-top: 18px;
+}
+.class-card {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 22px 14px; border-radius: var(--radius);
+  background: #fff; box-shadow: var(--shadow-card);
+  cursor: pointer; border: 4px solid transparent; font-family: var(--font);
+  transition: transform 0.12s ease, border-color 0.12s ease;
+}
+.class-card:active { transform: scale(0.96); }
+.class-card:hover { border-color: var(--english); }
+.class-card .cc-emoji { font-size: 3.2rem; }
+.class-card .cc-name { font-weight: 800; font-size: 1.35rem; color: var(--ink); }
+.class-card .cc-age { font-size: 0.95rem; color: var(--ink-soft); font-weight: 600; }
+.class-card.baby { background: linear-gradient(180deg, #fff, #fff3d6); }
+.class-card.middle { background: linear-gradient(180deg, #fff, #ffe9f0); }
+.class-card.top { background: linear-gradient(180deg, #fff, #e8f4ff); }
+.class-card.p1 { background: linear-gradient(180deg, #fff, #eafff3); }
+.class-card.p2 { background: linear-gradient(180deg, #fff, #f1eaff); }
+.class-card.p3 { background: linear-gradient(180deg, #fff, #fff0e0); }
+
+.avatar-grid { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 14px; }
+.avatar-opt {
+  width: 84px; height: 84px; border-radius: 26px; border: 4px solid #e4e9f7;
+  background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 2.6rem; transition: transform 0.12s ease, border-color 0.12s ease;
+}
+.avatar-opt svg { width: 100%; height: 100%; }
+.avatar-opt.selected { border-color: var(--english); transform: scale(1.08); background: #eaf3ff; box-shadow: 0 6px 16px rgba(47,125,225,0.3); }
+.avatar-opt:active { transform: scale(0.94); }
+
+/* ---------- home screen ---------- */
+.home-hello { text-align: center; margin-bottom: 20px; }
+.home-hello .hh-name { font-size: clamp(1.7rem, 5vw, 2.4rem); font-weight: 800; }
+.home-hello .hh-name span { background: linear-gradient(90deg,#e8458b,#f99a1c); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.home-hello .hh-sub { color: var(--ink-soft); font-weight: 600; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; }
+.home-hello .hh-avatar { font-size: 3rem; display: inline-block; animation: floaty 3s ease-in-out infinite; }
+.home-hello .hh-avatar svg { width: 74px; height: 74px; }
+
+.class-switch-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: none; cursor: pointer; font-family: inherit; font-weight: 800;
+  font-size: 1rem; color: var(--ink);
+  background: #fff; border-radius: 999px; padding: 6px 12px 6px 10px;
+  box-shadow: 0 4px 0 rgba(51,56,92,0.12);
+}
+.class-switch-chip .csc-icon { font-size: 0.95rem; }
+.class-switch-chip:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(51,56,92,0.12); }
+
+#class-switcher {
+  position: fixed; inset: 0; z-index: 130;
+  background: rgba(51,56,92,0.45);
+  display: flex; align-items: flex-end; justify-content: center;
+  padding: 16px 16px calc(16px + env(safe-area-inset-bottom));
+}
+#class-switcher .cs-card {
+  background: #fff; border-radius: 28px; padding: 20px 16px 16px;
+  width: min(520px, 100%); text-align: center;
+  box-shadow: var(--shadow-card);
+}
+#class-switcher .cs-title { font-size: 1.4rem; font-weight: 800; }
+#class-switcher .cs-sub { color: var(--ink-soft); font-weight: 600; margin: 4px 0 14px; }
+#class-switcher .cs-grid {
+  display: grid; gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  margin-bottom: 12px;
+}
+#class-switcher .cs-opt {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  border: 3px solid #e4e9f7; background: #fff; border-radius: 18px;
+  padding: 12px 8px; cursor: pointer; font-family: inherit;
+}
+#class-switcher .cs-opt.on { border-color: var(--english); background: #eaf3ff; }
+#class-switcher .cs-emoji { font-size: 1.8rem; }
+#class-switcher .cs-name { font-weight: 800; font-size: 0.95rem; color: var(--ink); }
+#class-switcher .cs-age { font-size: 0.75rem; color: var(--ink-soft); font-weight: 600; }
+#class-switcher .cs-close { width: 100%; }
+
+.adventure-banner { display: none !important; /* hidden: removed from home */
+  /* original kept only so old caches do not flash */
+  
+  display: flex; align-items: center; gap: 16px;
+  background: linear-gradient(90deg, #fff3cd, #ffe9b8);
+  border: 3px solid #ffd75e; border-radius: var(--radius);
+  padding: 16px 20px; margin-bottom: 22px; cursor: pointer;
+  box-shadow: var(--shadow-card);
+}
+.adventure-banner .ab-icon { font-size: 2.6rem; }
+.adventure-banner .ab-title { font-weight: 800; font-size: 1.25rem; }
+.adventure-banner .ab-sub { font-size: 0.95rem; color: #8a6d1f; font-weight: 600; }
+.adventure-banner .ab-go { font-size: 1.8rem; margin-left: auto; }
+
+.home-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); }
+.home-card {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 22px 12px; border-radius: var(--radius); border: none; cursor: pointer;
+  font-family: var(--font); font-weight: 700; font-size: 1.15rem; color: #fff;
+  box-shadow: 0 7px 0 rgba(0,0,0,0.12), var(--shadow-card);
+  transition: transform 0.1s ease;
+}
+.home-card:active { transform: translateY(5px) scale(0.98); box-shadow: 0 2px 0 rgba(0,0,0,0.12); }
+.home-card .hc-icon { font-size: 2.7rem; }
+.home-card.learn { background: linear-gradient(160deg, #4a90e2, #2f7de1); }
+.home-card.play { background: linear-gradient(160deg, #ff9457, #ff7a3d); }
+.home-card.creative { background: linear-gradient(160deg, #f56bb0, #ec4899); }
+.home-card.progress { background: linear-gradient(160deg, #ffd75e, #ffb703); color: #7a5200; }
+.home-card.parent { background: linear-gradient(160deg, #9d7bfa, #8b5cf6); }
+
+/* ---------- learn / subject ---------- */
+.subject-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+.lesson-list { display: flex; flex-direction: column; gap: 14px; margin-top: 10px; }
+.lesson-row {
+  display: flex; align-items: center; gap: 14px;
+  background: #fff; border-radius: 22px; padding: 14px 18px;
+  box-shadow: var(--shadow-card); cursor: pointer; border: none;
+  font-family: var(--font); text-align: left; transition: transform 0.1s ease;
+  border-left: 10px solid var(--english);
+}
+.lesson-row:active { transform: scale(0.98); }
+.lesson-row .lr-icon { font-size: 2.2rem; }
+.lesson-row .lr-title { font-weight: 700; font-size: 1.15rem; }
+.lesson-row .lr-sub { font-size: 0.9rem; color: var(--ink-soft); font-weight: 600; }
+.lesson-row .lr-stars { margin-left: auto; font-size: 1.1rem; letter-spacing: 2px; white-space: nowrap; }
+.lesson-row.done { border-left-color: var(--green); }
+.lesson-row.current { border-left-color: var(--gold); }
+.lesson-row .lr-now { background: #fff7d6; border-radius: 12px; padding: 4px 10px; font-size: 0.8rem; font-weight: 800; color: #b7791f; }
+
+/* ---------- journey ---------- */
+.journey-tabs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 18px; }
+.jtab {
+  border: none; cursor: pointer; font-family: var(--font); font-weight: 700; font-size: 1rem;
+  border-radius: 40px; padding: 10px 18px; background: #fff; color: var(--ink-soft);
+  box-shadow: 0 4px 0 rgba(51,56,92,0.15);
+}
+.jtab.active { color: #fff; box-shadow: 0 4px 0 rgba(0,0,0,0.2); }
+.journey-path { display: flex; flex-direction: column; align-items: center; padding: 10px 0; }
+.jnode {
+  display: flex; flex-direction: column; align-items: center; position: relative; width: 100%;
+}
+.jnode .jn-dot {
+  width: 74px; height: 74px; border-radius: 50%;
+  background: #fff; border: 5px solid #dfe4f5;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.9rem; box-shadow: var(--shadow-card); z-index: 2;
+}
+.jnode .jn-dot.done { border-color: var(--gold); background: #fff7d6; }
+.jnode .jn-dot.current { border-color: var(--english); animation: pulse 1.6s ease infinite; }
+.jnode .jn-line { width: 6px; height: 44px; background: #dfe4f5; border-radius: 4px; }
+.jnode .jn-line.done { background: var(--gold); }
+.jnode .jn-label { font-weight: 700; font-size: 0.95rem; margin-top: 6px; text-align: center; max-width: 200px; }
+.jnode .jn-stars { font-size: 0.85rem; letter-spacing: 1px; }
+
+/* ---------- progress ---------- */
+.progress-hero {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 26px; text-align: center;
+}
+.progress-hero .ph-stars { font-size: 2.4rem; letter-spacing: 4px; }
+.progress-hero .ph-num { font-size: 2.6rem; font-weight: 800; color: #b7791f; }
+.progress-hero .ph-label { color: var(--ink-soft); font-weight: 700; }
+.subject-progress { margin-bottom: 16px; }
+.subject-progress .sp-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-weight: 700; }
+.subject-progress .sp-head .sp-name { font-size: 1.05rem; }
+.subject-progress .sp-head .sp-stars { font-size: 0.95rem; color: #b7791f; }
+
+/* ---------- rewards / badges ---------- */
+.badge-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+.badge-card {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 20px 10px; border-radius: var(--radius);
+  background: #fff; box-shadow: var(--shadow-card); text-align: center;
+  border: 4px solid #fff;
+}
+.badge-card .bc-icon { font-size: 2.8rem; }
+.badge-card .bc-name { font-weight: 800; font-size: 1rem; }
+.badge-card .bc-desc { font-size: 0.82rem; color: var(--ink-soft); font-weight: 600; }
+.badge-card.unlocked { border-color: var(--gold); background: linear-gradient(180deg, #fffdf0, #fff7d6); }
+.badge-card.locked { opacity: 0.55; filter: grayscale(0.9); }
+
+/* ---------- adventure ---------- */
+.task-row {
+  display: flex; align-items: center; gap: 14px;
+  background: #fff; border-radius: 20px; padding: 16px 18px;
+  box-shadow: var(--shadow-card); margin-bottom: 12px;
+  border: 3px solid transparent;
+}
+.task-row .task-check {
+  width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+  border: 3px solid #dfe4f5; background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; font-weight: 800; color: transparent;
+}
+.task-row.done .task-check { background: var(--green); border-color: var(--green-dark); color: #fff; }
+.task-row.done { border-color: var(--green); background: #f0fff4; }
+.task-row .task-label { font-weight: 700; font-size: 1.1rem; }
+.task-row .task-sub { font-size: 0.9rem; color: var(--ink-soft); font-weight: 600; }
+
+/* ---------- parent area ---------- */
+.pin-pad { display: grid; grid-template-columns: repeat(3, 88px); gap: 14px; justify-content: center; margin-top: 16px; }
+.pin-key {
+  width: 88px; height: 88px; border-radius: 24px; border: none; cursor: pointer;
+  font-family: var(--font); font-size: 2rem; font-weight: 800; color: var(--ink);
+  background: #fff; box-shadow: 0 6px 0 #dfe4f5, var(--shadow-card);
+  transition: transform 0.08s ease;
+}
+.pin-key:active { transform: translateY(4px); box-shadow: 0 2px 0 #dfe4f5; }
+.pin-dots { display: flex; gap: 14px; justify-content: center; margin: 10px 0 6px; }
+.pin-dots .pd { width: 22px; height: 22px; border-radius: 50%; background: #e4e9f7; }
+.pin-dots .pd.filled { background: var(--english); }
+.stat-cards { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); margin-bottom: 10px; }
+.stat-card {
+  background: #fff; border-radius: 20px; padding: 16px 12px; text-align: center;
+  box-shadow: var(--shadow-card);
+}
+.stat-card .sc-num { font-size: 1.9rem; font-weight: 800; }
+.stat-card .sc-label { font-size: 0.85rem; color: var(--ink-soft); font-weight: 700; }
+.stat-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 4px; border-bottom: 2px dashed #eef1fa; font-weight: 700; }
+.stat-row:last-child { border-bottom: none; }
+.log-line { font-size: 0.92rem; color: var(--ink-soft); font-weight: 600; padding: 6px 0; border-bottom: 1px dashed #eef1fa; }
+.log-line .ll-time { color: #b0b6d4; font-size: 0.8rem; }
+
+/* lesson cards — same size & padding as subject cards */
+.lesson-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); margin-top: 10px; }
+.lesson-card { min-height: 148px; } /* matches .subject-card exactly */
+.lesson-card .lc-topic { font-size: 0.88rem; color: var(--ink-soft); font-weight: 600; text-align: center; }
+.lesson-card .sc-pill {
+  background: #fff7d6; border-radius: 12px; padding: 3px 12px;
+  font-size: 0.8rem; font-weight: 800; color: #b7791f;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.08);
+}
+.lesson-card.done { border-top-color: var(--green) !important; }
+.lesson-card.current { animation: pulse 1.8s ease infinite; }
+@media (max-width: 640px) {
+  .lesson-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .lesson-card { min-height: 124px; }
+}
+
+/* ---------- kindergarten activity area cards ---------- */
+.area-card {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; padding: 22px 12px; border-radius: 24px; background: #fff;
+  box-shadow: var(--shadow-card); cursor: pointer; border: none; font-family: var(--font);
+  border-top: 10px solid var(--ac, #2f7de1);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  min-height: 152px;
+}
+.area-card:active { transform: translateY(4px) scale(0.97); box-shadow: 0 3px 0 rgba(51,56,92,0.15); }
+.area-card .ac-icon { font-size: clamp(2.8rem, 11vw, 4rem); line-height: 1; filter: drop-shadow(0 3px 4px rgba(51,56,92,0.15)); }
+.area-card .ac-name { font-weight: 800; font-size: clamp(1rem, 4vw, 1.3rem); letter-spacing: 1px; color: var(--ink); }
+.area-card:hover { transform: translateY(-2px); }
+@media (max-width: 640px) {
+  .area-card { min-height: 126px; padding: 16px 8px; }
+  .area-card .ac-icon { font-size: clamp(2.3rem, 12vw, 3rem); }
+  .area-card .ac-name { font-size: 0.95rem; }
+}

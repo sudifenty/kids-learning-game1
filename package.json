@@ -1,0 +1,30 @@
+{
+  "name": "lets-learn",
+  "version": "1.0.0",
+  "description": "🌈 Let's Learn — a colorful children's educational learning world (Baby Class → P3)",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node server/server.js",
+    "voice": "node tools/build-voice-pack.js"
+  },
+  "keywords": [
+    "education",
+    "children",
+    "kindergarten",
+    "primary",
+    "learning",
+    "games"
+  ],
+  "author": "Let's Learn",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  },
+  "dependencies": {
+    "msedge-tts": "^2.0.7"
+  },
+  "devDependencies": {
+    "jsdom": "^24.1.3"
+  }
+}

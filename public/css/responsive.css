@@ -1,0 +1,87 @@
+/* ==========================================================================
+   🌈 LET'S LEARN — responsive.css
+   Phones, tablets, laptops, desktops. Touch-first.
+   ========================================================================== */
+
+@media (max-width: 640px) {
+  #app { padding: 6px 10px 104px; }
+  .panel { padding: 16px; border-radius: 20px; }
+  .screen-title { font-size: 1.6rem; margin: 4px 0 14px; }
+  .btn { font-size: 1.05rem; padding: 14px 20px; min-height: 52px; border-radius: 18px; }
+  .btn.big { font-size: 1.3rem; padding: 16px 26px; min-height: 62px; }
+  .subject-card { min-height: 120px; padding: 14px 8px; }
+  .subject-card .sc-icon { font-size: 2.2rem; }
+  .subject-card .sc-name { font-size: 1.05rem; }
+  .logo .logo-text { font-size: 1.05rem; }
+  .logo .logo-emoji { font-size: 1.2rem; }
+  .icon-btn { width: 46px; height: 46px; font-size: 1.25rem; border-radius: 15px; }
+  .chip { font-size: 0.9rem; padding: 6px 10px; }
+  .nav-item { min-width: 54px; padding: 5px 8px; font-size: 0.72rem; }
+  .nav-item .n-icon { font-size: 1.35rem; }
+  .lesson-emoji { font-size: clamp(3rem, 16vw, 4rem); }
+  .answer-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .answer-btn { min-height: 84px; font-size: 1.3rem; padding: 12px 8px; }
+  .nb-btn { width: 48px; height: 48px; font-size: 1.25rem; }
+  .nb-volume { width: 84px; }
+  .nb-speed-chip { padding: 6px 12px; font-size: 0.85rem; }
+  .answer-btn .ab-big { font-size: clamp(1.9rem, 9vw, 2.4rem); }
+  .memory-grid { max-width: 340px; gap: 9px; }
+  .mem-card { font-size: 1.6rem; }
+  .match-grid { grid-template-columns: repeat(2, 1fr); }
+  .match-card { min-height: 92px; }
+  .balloon-field { height: 320px; }
+  .balloon svg { width: clamp(76px, 20vw, 100px); height: auto; }
+  .balloon .bl-num { font-size: 1.4rem; }
+  .color-option { width: clamp(56px, 13vw, 68px); height: clamp(56px, 13vw, 68px); }
+  .shape-option { min-height: 96px; }
+  .shape-option svg { width: clamp(52px, 14vw, 64px); height: auto; }
+  .order-chip { width: clamp(52px, 12vw, 60px); height: clamp(52px, 12vw, 60px); font-size: 1.4rem; }
+  .adventure-banner { padding: 12px 14px; }
+  .adventure-banner .ab-icon { font-size: 2rem; }
+  .home-hello .hh-avatar svg { width: 58px; height: 58px; }
+  .pin-pad { grid-template-columns: repeat(3, 74px); }
+  .pin-key { width: 74px; height: 74px; font-size: 1.7rem; }
+  .journey-tabs { gap: 6px; }
+  .jtab { padding: 8px 12px; font-size: 0.9rem; }
+  .title-hero { font-size: 2.4rem; }
+  .logo-hero { font-size: 4rem; }
+  .read-card { font-size: 1.3rem; padding: 18px; }
+  .trace-canvas-wrap, .coloring-svg-wrap { max-width: 100%; }
+  .lesson-letter { font-size: clamp(4rem, 20vw, 5.2rem); }
+}
+
+@media (max-width: 380px) {
+  .answer-grid { grid-template-columns: repeat(2, 1fr); }
+  .card-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .memory-grid { grid-template-columns: repeat(3, 1fr); max-width: 280px; }
+  .home-card .hc-icon { font-size: 2.1rem; }
+}
+
+/* tablets & up */
+@media (min-width: 768px) {
+  .card-grid { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+  .subject-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+}
+
+/* landscape phones */
+@media (max-height: 500px) and (orientation: landscape) {
+  .welcome-wrap { min-height: auto; padding: 30px 0; }
+  .logo-hero { font-size: 3.2rem; }
+  .title-hero { font-size: 2.4rem; }
+}
+
+/* reduce motion for sensitive learners */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* focus visibility for accessibility */
+:focus-visible {
+  outline: 4px solid #ffb703;
+  outline-offset: 3px;
+  border-radius: 8px;
+}

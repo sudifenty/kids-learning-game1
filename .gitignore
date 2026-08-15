@@ -1,0 +1,11 @@
+# dependencies
+node_modules/
+
+# runtime caches & generated state
+server/data/tts-cache/*.mp3
+server/data/state.json
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.log
